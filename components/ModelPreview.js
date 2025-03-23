@@ -20,6 +20,9 @@ const Model = ({ modelPath, scale }) => {
   return <primitive object={modelScene} scale={scale} />;
 };
 
+// 添加 Model 组件的显示名称
+Model.displayName = 'Model';
+
 // 预加载常用模型
 export const preloadModels = (modelPaths) => {
   modelPaths.forEach(path => {
