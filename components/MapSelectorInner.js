@@ -33,7 +33,7 @@ const MapSelectorInner = ({ coordinates, onChange }) => {
     return () => {
       map.remove();
     };
-  }, [coordinates, onChange]); // 添加依赖项
+  }, [coordinates, onChange]); // ✅ 已经正确添加了依赖项
   
   // 更新标记位置的 useEffect
   useEffect(() => {

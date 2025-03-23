@@ -20,7 +20,7 @@ const Model = ({ modelPath, scale }) => {
   return <primitive object={modelScene} scale={scale} />;
 };
 
-// 添加 Model 组件的显示名称
+// Model 组件的 displayName
 Model.displayName = 'Model';
 
 // 预加载常用模型
@@ -55,6 +55,7 @@ const ModelPreview = memo(({ modelPath, scale = 1 }) => {
   );
 });
 
+// ModelPreview 组件的 displayName
 ModelPreview.displayName = 'ModelPreview';
 
 export default ModelPreview; 
