@@ -52,4 +52,6 @@ const ModelPreview = memo(({ modelPath, scale = 1 }) => {
   );
 });
 
+ModelPreview.displayName = 'ModelPreview';
+
 export default ModelPreview; 

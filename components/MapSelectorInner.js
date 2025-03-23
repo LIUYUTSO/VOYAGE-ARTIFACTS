@@ -37,7 +37,7 @@ const MapSelectorInner = ({ coordinates, onChange }) => {
     return () => {
       map.remove();
     };
-  }, []);
+  }, [coordinates, onChange]);
   
   // 當坐標發生變化時更新標記位置
   useEffect(() => {
