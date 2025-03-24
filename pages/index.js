@@ -56,9 +56,12 @@ const useScrollPosition = () => {
 };
 
 export default function Home() {
-  const [locationInfo, setLocationInfo] = useState(defaultLocationInfo);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isClosing, setIsClosing] = useState(false);
+  const [locationInfo, setLocationInfo] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 使用自定义 Hook 替换原来的滚动监听逻辑
   const scrollPercent = useScrollPosition();
 
   const handleClose = useCallback(() => {
@@ -73,17 +76,27 @@ export default function Home() {
     setSelectedLocation(location);
   }, []);
 
-  // 恢复 localStorage 功能
+  // 從localStorage加載數據
   useEffect(() => {
     try {
       const savedLocationInfo = localStorage.getItem('locationInfo') || localStorage.getItem('collections');
       if (savedLocationInfo) {
         setLocationInfo(JSON.parse(savedLocationInfo));
+      } else {
+        setLocationInfo(defaultLocationInfo);
       }
     } catch (error) {
       console.error('Error loading location data:', error);
+      setLocationInfo(defaultLocationInfo);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
+  
+  // 在數據加載時顯示加載狀態
+  if (isLoading) {
+    return <div className="text-center py-10">Loading collections...</div>;
+  }
 
   return (
     <main className="relative">
@@ -173,7 +186,7 @@ export default function Home() {
           <div className="relative bg-white p-10 rounded-lg shadow-sm">
             {/* 更新後的名言內容 */}
             <p className="text-gray-700 text-lg leading-relaxed italic text-center mb-6">
-            Every journey leaves behind meaningful treasures. This collection showcases objects from my travels, each holding a story, a place, and a moment worth sharing.
+              Every journey leaves behind more than just memories—it carries with it objects that hold meaning, beauty, and untold stories. This collection is a personal archive of treasures gathered along my travels, each piece reflecting a moment, a place, and an experience worth sharing. Through this showcase, I invite you to explore these cherished finds and the stories they hold.
             </p>
             
             {/* 恢復愛心符號的分隔線 */}
