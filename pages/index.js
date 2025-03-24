@@ -13,36 +13,34 @@ const ModelPopup = dynamic(() => import('../components/ModelPopup'), {
   ssr: false
 });
 
-// 修改 useScrollPosition hook
+// 修改回原来的 useScrollPosition hook
 const useScrollPosition = () => {
   const [scrollPercent, setScrollPercent] = useState(0);
 
   useEffect(() => {
-    let rafId = null;
+    let rafId;
+    let ticking = false;
 
     const updateScrollPosition = () => {
       const scrollPosition = window.scrollY;
-      const maxScroll = 100;
-      const percent = Math.min(scrollPosition / maxScroll, 1);
+      const percent = Math.min(scrollPosition / 100, 1);
       setScrollPercent(percent);
+      ticking = false;
     };
 
     const handleScroll = () => {
-      if (rafId) {
-        return;  // 如果已经有待处理的动画帧，直接返回
+      if (!ticking) {
+        rafId = requestAnimationFrame(updateScrollPosition);
+        ticking = true;
       }
-      
-      rafId = requestAnimationFrame(() => {
-        updateScrollPosition();
-        rafId = null;
-      });
     };
 
     if (typeof window !== 'undefined') {
       window.addEventListener('scroll', handleScroll, { passive: true });
-      // 初始化滚动位置
-      updateScrollPosition();
       
+      // 初始化滚动位置
+      handleScroll();
+
       return () => {
         window.removeEventListener('scroll', handleScroll);
         if (rafId) {
@@ -106,18 +104,15 @@ export default function Home() {
         style={{
           backgroundColor: `rgba(255, 255, 255, ${scrollPercent * 0.8})`,
           backdropFilter: `blur(${scrollPercent * 8}px)`,
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          boxShadow: scrollPercent > 0 
-            ? `0 1px 3px rgba(0,0,0,${scrollPercent * 0.1})` 
-            : 'none'
+          transition: 'background-color 0.2s ease-out, backdrop-filter 0.2s ease-out'
         }}
       >
         <div 
           className="relative max-w-3xl mx-auto text-center px-4"
           style={{
-            paddingTop: `${Math.max(48 - scrollPercent * 36, 12)}px`,
-            paddingBottom: `${Math.max(48 - scrollPercent * 36, 12)}px`,
-            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+            transform: `scale(${1 - scrollPercent * 0.2})`,
+            padding: `${Math.max(48 - scrollPercent * 36, 12)}px 1rem`,
+            transition: 'transform 0.2s ease-out, padding 0.2s ease-out'
           }}
         >
           {/* 主標題 */}
@@ -125,17 +120,11 @@ export default function Home() {
             <h1 
               className="font-bold tracking-tight"
               style={{
-                fontSize: `${2.25 - (scrollPercent * 0.75)}rem`,  // 直接计算字体大小，不使用 Math.max
+                fontSize: `${Math.max(2.25 - scrollPercent * 0.75, 1.5)}rem`,
                 color: scrollPercent > 0 
                   ? `rgb(17, 24, 39)` 
-                  : `rgb(255, 255, 255)`,
-                transition: 'all 0.15s linear',  // 使用更短的过渡时间和线性过渡
-                backgroundImage: scrollPercent > 0 
-                  ? 'none' 
-                  : 'linear-gradient(to right, rgb(255, 255, 255), rgb(229, 231, 235))',
-                backgroundClip: scrollPercent > 0 ? 'border-box' : 'text',
-                WebkitBackgroundClip: scrollPercent > 0 ? 'border-box' : 'text',
-                willChange: 'transform, font-size'  // 提示浏览器优化这些属性的变化
+                  : 'rgb(255, 255, 255)',
+                transition: 'font-size 0.2s ease-out, color 0.2s ease-out'
               }}
             >
               VOYAGE
@@ -146,13 +135,8 @@ export default function Home() {
                 fontSize: `${Math.max(2.25 - scrollPercent * 0.75, 1.5)}rem`,
                 color: scrollPercent > 0 
                   ? `rgb(17, 24, 39)` 
-                  : `rgb(255, 255, 255)`,
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                backgroundImage: scrollPercent > 0 
-                  ? 'none' 
-                  : 'linear-gradient(to right, rgb(255, 255, 255), rgb(229, 231, 235))',
-                backgroundClip: scrollPercent > 0 ? 'border-box' : 'text',
-                WebkitBackgroundClip: scrollPercent > 0 ? 'border-box' : 'text'
+                  : 'rgb(255, 255, 255)',
+                transition: 'font-size 0.2s ease-out, color 0.2s ease-out'
               }}
             >
               ARTIFACTS
@@ -165,7 +149,7 @@ export default function Home() {
               opacity: Math.max(1 - scrollPercent * 2, 0),
               height: scrollPercent >= 0.5 ? '0' : 'auto',
               overflow: 'hidden',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              transition: 'opacity 0.2s ease-out, height 0.2s ease-out'
             }}
           >
             <div className="mt-2 w-16 h-[1px] bg-gradient-to-r from-gray-400 to-gray-200 mx-auto"></div>

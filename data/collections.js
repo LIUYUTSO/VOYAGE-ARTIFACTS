@@ -15,9 +15,8 @@
 // ];
 
 // 以下是完整的 locationInfo 数组，供主页和管理页面使用
-export const locationInfo = {
-  "sakura-charm": {
-    id: "sakura-charm",
+export const locationInfo = [
+  {
     name: "Sakura Charm",
     description: "A delicate cherry blossom-inspired artifact from Japan",
     location: "Tokyo, Japan",
@@ -27,8 +26,7 @@ export const locationInfo = {
     coordinates: [35.6762, 139.6503],
     travelNote: "Found this exquisite piece in a century-old craft shop in Asakusa."
   },
-  "dynasty-echo": {
-    id: "dynasty-echo",
+  {
     name: "Dynasty Echo",
     description: "Traditional Korean handicraft with historical significance",
     location: "Seoul, South Korea",
@@ -38,8 +36,7 @@ export const locationInfo = {
     coordinates: [37.5665, 126.9780],
     travelNote: "Purchased from a master craftsman who explained its cultural significance."
   },
-  "lotus-whisper": {
-    id: "lotus-whisper",
+  {
     name: "Lotus Whisper",
     description: "Thai-inspired decorative piece with intricate details",
     location: "Bangkok, Thailand",
@@ -49,8 +46,7 @@ export const locationInfo = {
     coordinates: [13.7563, 100.5018],
     travelNote: "Discovered in a floating market on a sunny afternoon."
   },
-  "heritage-weave": {
-    id: "heritage-weave",
+  {
     name: "Heritage Weave",
     description: "Hand-woven Vietnamese basket with traditional patterns",
     location: "Hanoi, Vietnam",
@@ -60,11 +56,11 @@ export const locationInfo = {
     coordinates: [21.0285, 105.8542],
     travelNote: "Created by a village artisan using techniques passed down for generations."
   }
-};
+];
 
 // 以下是管理界面使用的 collections
-export const collections = Object.values(locationInfo).map((item, index) => ({
-  id: item.id,
+export const collections = locationInfo.map((item, index) => ({
+  id: index + 1,
   name: item.name,
   description: item.description || '',
   location: item.location,

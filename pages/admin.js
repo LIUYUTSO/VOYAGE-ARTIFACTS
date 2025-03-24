@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { locationInfo as defaultLocationInfo } from '../data/collections';
 
 // Dynamic imports for client-side only components
 const MapSelector = dynamic(() => import('../components/MapSelector'), {
@@ -41,7 +40,7 @@ const defaultCollections = [
 export default function Admin() {
   const [password, setPassword] = useState('');
   const [authorized, setAuthorized] = useState(false);
-  const [collections, setCollections] = useState(defaultLocationInfo);
+  const [collections, setCollections] = useState([]);
   const [newItem, setNewItem] = useState({
     name: '',
     description: '',
@@ -62,6 +61,28 @@ export default function Admin() {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    // Load collections from localStorage if available
+    const loadCollections = async () => {
+      try {
+        const savedCollections = localStorage.getItem('collections');
+        if (savedCollections) {
+          setCollections(JSON.parse(savedCollections));
+        } else {
+          setCollections(defaultCollections);
+          localStorage.setItem('collections', JSON.stringify(defaultCollections));
+        }
+      } catch (error) {
+        console.error('Error loading collections:', error);
+        setCollections(defaultCollections);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadCollections();
+  }, []);
 
   useEffect(() => {
     // 获取可用模型列表
@@ -132,20 +153,36 @@ export default function Admin() {
     }
   };
 
-  const handleAddCollection = (newCollection) => {
-    setCollections(prev => ({
-      ...prev,
-      [newCollection.id]: newCollection
-    }));
-    // 仅预览，不保存
+  const saveCollections = (updatedCollections) => {
+    localStorage.setItem('collections', JSON.stringify(updatedCollections));
   };
 
-  const handleEditCollection = (id, updatedCollection) => {
-    setCollections(prev => ({
-      ...prev,
-      [id]: updatedCollection
-    }));
-    // 仅预览，不保存
+  const addCollection = (item) => {
+    const updatedCollections = [
+      ...collections,
+      {
+        id: Date.now(), // Use timestamp as ID
+        ...item
+      }
+    ];
+    setCollections(updatedCollections);
+    saveCollections(updatedCollections);
+    return updatedCollections;
+  };
+
+  const updateCollection = (id, updatedItem) => {
+    const updatedCollections = collections.map(item => 
+      item.id === id ? { ...updatedItem, id } : item
+    );
+    setCollections(updatedCollections);
+    saveCollections(updatedCollections);
+    return updatedCollections;
+  };
+
+  const deleteCollection = (id) => {
+    const updatedCollections = collections.filter(item => item.id !== id);
+    setCollections(updatedCollections);
+    saveCollections(updatedCollections);
   };
 
   const selectForEdit = (item) => {
@@ -164,12 +201,12 @@ export default function Admin() {
     }
     
     if (editMode) {
-      handleEditCollection(editId, newItem);
+      updateCollection(editId, newItem);
       alert('Item updated successfully!');
       setEditMode(false);
       setEditId(null);
     } else {
-      handleAddCollection(newItem);
+      addCollection(newItem);
       alert('New item added successfully!');
     }
     
@@ -192,7 +229,7 @@ export default function Admin() {
       localStorage.setItem('collections', JSON.stringify(collections));
       
       // 转换为主页需要的格式并保存
-      const formattedForIndex = Object.values(collections).map(item => ({
+      const formattedForIndex = collections.map(item => ({
         name: item.name,
         description: item.description,
         location: item.location,
@@ -230,7 +267,8 @@ export default function Admin() {
         }));
         
         // 更新状态和localStorage
-        setCollections(formattedCollections.reduce((acc, item) => ({ ...acc, [item.id]: item }), {}));
+        setCollections(formattedCollections);
+        saveCollections(formattedCollections);
         alert('Successfully reset to default collections!');
       });
     }
@@ -255,7 +293,7 @@ export default function Admin() {
       
       // 检查当前集合中是否有无效模型路径
       let hasChanges = false;
-      const updatedCollections = Object.values(collections).map(item => {
+      const updatedCollections = collections.map(item => {
         // 检查当前模型路径是否存在
         if (!availableModels.includes(item.modelPath)) {
           hasChanges = true;
@@ -287,7 +325,8 @@ export default function Admin() {
       }
       
       // 更新集合
-      setCollections(updatedCollections.reduce((acc, item) => ({ ...acc, [item.id]: item }), {}));
+      setCollections(updatedCollections);
+      saveCollections(updatedCollections);
       alert('已自动修复无效的模型路径。请查看更新后的集合项。');
       
     } catch (error) {
@@ -368,7 +407,7 @@ export default function Admin() {
       // 更新本地存储
       localStorage.setItem('collections', JSON.stringify(serverData));
       // 刷新页面显示
-      setCollections(serverData.reduce((acc, item) => ({ ...acc, [item.id]: item }), {}));
+      setCollections(serverData);
     } catch (error) {
       console.error('同步失败:', error);
     }
@@ -452,11 +491,6 @@ export default function Admin() {
               Cancel Edit
             </button>
           )}
-        </div>
-        
-        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
-          <p className="font-bold">Preview Mode</p>
-          <p>Changes made here are for preview only. To update the website, please modify the collections.js file.</p>
         </div>
         
         <form onSubmit={handleSubmit} className="p-6">
@@ -705,7 +739,7 @@ export default function Admin() {
             </button>
             <button 
               onClick={() => {
-                const data = JSON.stringify(Object.values(collections));
+                const data = JSON.stringify(collections);
                 const blob = new Blob([data], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -729,7 +763,8 @@ export default function Admin() {
                   reader.onload = (event) => {
                     try {
                       const importedData = JSON.parse(event.target.result);
-                      setCollections(importedData.reduce((acc, item) => ({ ...acc, [item.id]: item }), {}));
+                      setCollections(importedData);
+                      saveCollections(importedData);
                       alert('Data imported successfully!');
                     } catch (error) {
                       alert('Error importing data: Invalid file format');
@@ -751,7 +786,7 @@ export default function Admin() {
         </div>
         
         {/* 表格部分 */}
-        {Object.values(collections).length === 0 ? (
+        {collections.length === 0 ? (
           <div className="text-center py-16">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -771,7 +806,7 @@ export default function Admin() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {Object.values(collections).map(item => (
+                {collections.map(item => (
                   <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                     <td className="py-4 px-6 text-sm font-medium text-gray-800">{item.name}</td>
                     <td className="py-4 px-6 text-sm text-gray-600">{item.location}</td>
@@ -792,10 +827,7 @@ export default function Admin() {
                         <button 
                           onClick={() => {
                             if (window.confirm('Are you sure you want to delete this item?')) {
-                              setCollections(prev => ({
-                                ...prev,
-                                [item.id]: undefined
-                              }));
+                              deleteCollection(item.id);
                             }
                           }}
                           className="text-gray-500 hover:text-red-600 transition-colors"
