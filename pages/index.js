@@ -159,7 +159,7 @@ export default function Home() {
           <div className="relative bg-white p-10 rounded-lg shadow-sm">
             {/* 更新後的名言內容 */}
             <p className="text-gray-700 text-lg leading-relaxed italic text-center mb-6">
-              Every journey leaves behind more than just memories—it carries with it objects that hold meaning, beauty, and untold stories. This collection is a personal archive of treasures gathered along my travels, each piece reflecting a moment, a place, and an experience worth sharing. Through this showcase, I invite you to explore these cherished finds and the stories they hold.
+            Every journey leaves behind meaningful treasures. This collection showcases objects from my travels, each holding a story, a place, and a moment worth sharing.
             </p>
             
             {/* 恢復愛心符號的分隔線 */}
