@@ -63,25 +63,15 @@ export default function Admin() {
   const router = useRouter();
 
   useEffect(() => {
-    // Load collections from localStorage if available
-    const loadCollections = async () => {
-      try {
-        const savedCollections = localStorage.getItem('collections');
-        if (savedCollections) {
-          setCollections(JSON.parse(savedCollections));
-        } else {
-          setCollections(defaultCollections);
-          localStorage.setItem('collections', JSON.stringify(defaultCollections));
-        }
-      } catch (error) {
-        console.error('Error loading collections:', error);
-        setCollections(defaultCollections);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadCollections();
+    // 从 collections.js 导入默认数据
+    import('../data/collections').then(({ locationInfo }) => {
+      const formattedCollections = locationInfo.map((item, index) => ({
+        id: index + 1,
+        ...item
+      }));
+      setCollections(formattedCollections);
+      setIsLoading(false);
+    });
   }, []);
 
   useEffect(() => {
@@ -153,21 +143,15 @@ export default function Admin() {
     }
   };
 
-  const saveCollections = (updatedCollections) => {
-    localStorage.setItem('collections', JSON.stringify(updatedCollections));
-  };
-
   const addCollection = (item) => {
     const updatedCollections = [
       ...collections,
       {
-        id: Date.now(), // Use timestamp as ID
+        id: Date.now(),
         ...item
       }
     ];
     setCollections(updatedCollections);
-    saveCollections(updatedCollections);
-    return updatedCollections;
   };
 
   const updateCollection = (id, updatedItem) => {
@@ -175,14 +159,11 @@ export default function Admin() {
       item.id === id ? { ...updatedItem, id } : item
     );
     setCollections(updatedCollections);
-    saveCollections(updatedCollections);
-    return updatedCollections;
   };
 
   const deleteCollection = (id) => {
     const updatedCollections = collections.filter(item => item.id !== id);
     setCollections(updatedCollections);
-    saveCollections(updatedCollections);
   };
 
   const selectForEdit = (item) => {
@@ -225,50 +206,22 @@ export default function Admin() {
 
   const saveToMainPage = () => {
     try {
-      // 将当前管理页面的集合数据保存到 localStorage
-      localStorage.setItem('collections', JSON.stringify(collections));
-      
-      // 转换为主页需要的格式并保存
-      const formattedForIndex = collections.map(item => ({
-        name: item.name,
-        description: item.description,
-        location: item.location,
-        date: item.date,
-        modelPath: item.modelPath,
-        scale: item.scale,
-        coordinates: item.coordinates,
-        travelNote: item.travelNote
-      }));
-      
-      localStorage.setItem('locationInfo', JSON.stringify(formattedForIndex));
-      
-      alert('Changes saved successfully! The main page will now display these items.');
+      // 直接使用 collections.js 的数据，不需要保存到 localStorage
+      alert('The main page always displays the default collection from collections.js');
     } catch (error) {
-      console.error('Save error:', error);
-      alert(`Error saving data: ${error.message}`);
+      console.error('Error:', error);
+      alert(`Error: ${error.message}`);
     }
   };
 
   const resetToDefaultCollections = () => {
-    if (window.confirm('Are you sure you want to reset to default collections? This will delete all your changes.')) {
-      // 从data/collections.js导入默认数据
+    if (window.confirm('Are you sure you want to reset to default collections?')) {
       import('../data/collections').then(({ locationInfo }) => {
-        // 转换格式
         const formattedCollections = locationInfo.map((item, index) => ({
           id: index + 1,
-          name: item.name,
-          description: item.description || '',
-          location: item.location,
-          date: item.date || '',
-          modelPath: item.modelPath,
-          scale: item.scale || 1,
-          coordinates: item.coordinates || [35.6762, 139.6503],
-          travelNote: item.travelNote || ''
+          ...item
         }));
-        
-        // 更新状态和localStorage
         setCollections(formattedCollections);
-        saveCollections(formattedCollections);
         alert('Successfully reset to default collections!');
       });
     }
@@ -326,7 +279,6 @@ export default function Admin() {
       
       // 更新集合
       setCollections(updatedCollections);
-      saveCollections(updatedCollections);
       alert('已自动修复无效的模型路径。请查看更新后的集合项。');
       
     } catch (error) {
@@ -404,8 +356,6 @@ export default function Admin() {
       // 获取最新数据
       const response = await fetch('/api/sync');
       const serverData = await response.json();
-      // 更新本地存储
-      localStorage.setItem('collections', JSON.stringify(serverData));
       // 刷新页面显示
       setCollections(serverData);
     } catch (error) {
@@ -764,7 +714,6 @@ export default function Admin() {
                     try {
                       const importedData = JSON.parse(event.target.result);
                       setCollections(importedData);
-                      saveCollections(importedData);
                       alert('Data imported successfully!');
                     } catch (error) {
                       alert('Error importing data: Invalid file format');

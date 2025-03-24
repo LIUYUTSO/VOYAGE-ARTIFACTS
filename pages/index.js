@@ -76,19 +76,8 @@ export default function Home() {
 
   // 從localStorage加載數據
   useEffect(() => {
-    try {
-      const savedLocationInfo = localStorage.getItem('locationInfo') || localStorage.getItem('collections');
-      if (savedLocationInfo) {
-        setLocationInfo(JSON.parse(savedLocationInfo));
-      } else {
-        setLocationInfo(defaultLocationInfo);
-      }
-    } catch (error) {
-      console.error('Error loading location data:', error);
-      setLocationInfo(defaultLocationInfo);
-    } finally {
-      setIsLoading(false);
-    }
+    setLocationInfo(defaultLocationInfo);
+    setIsLoading(false);
   }, []);
   
   // 在數據加載時顯示加載狀態
