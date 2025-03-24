@@ -59,9 +59,6 @@ export default function Home() {
   const [locationInfo, setLocationInfo] = useState(defaultLocationInfo);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isClosing, setIsClosing] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // 使用自定义 Hook 替换原来的滚动监听逻辑
   const scrollPercent = useScrollPosition();
 
   const handleClose = useCallback(() => {
@@ -76,16 +73,17 @@ export default function Home() {
     setSelectedLocation(location);
   }, []);
 
-  // 從localStorage加載數據
+  // 恢复 localStorage 功能
   useEffect(() => {
-    // 直接使用 defaultLocationInfo
-    setLocationInfo(defaultLocationInfo);
+    try {
+      const savedLocationInfo = localStorage.getItem('locationInfo') || localStorage.getItem('collections');
+      if (savedLocationInfo) {
+        setLocationInfo(JSON.parse(savedLocationInfo));
+      }
+    } catch (error) {
+      console.error('Error loading location data:', error);
+    }
   }, []);
-  
-  // 在數據加載時顯示加載狀態
-  if (isLoading) {
-    return <div className="text-center py-10">Loading collections...</div>;
-  }
 
   return (
     <main className="relative">
