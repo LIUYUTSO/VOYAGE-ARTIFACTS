@@ -31,7 +31,7 @@ export const locationInfo = [
     description: "Traditional Korean handicraft with historical significance",
     location: "Seoul, South Korea",
     date: "2023-10-15",
-    modelPath: "/models/Korean.glb",
+    modelPath: "/models/Chou.glb",
     scale: 1.0,
     coordinates: [37.5665, 126.9780],
     travelNote: "Purchased from a master craftsman who explained its cultural significance."
@@ -41,7 +41,7 @@ export const locationInfo = [
     description: "Thai-inspired decorative piece with intricate details",
     location: "Bangkok, Thailand",
     date: "2023-08-05",
-    modelPath: "/models/Thai.glb",
+    modelPath: "/models/Chou.glb",
     scale: 0.8,
     coordinates: [13.7563, 100.5018],
     travelNote: "Discovered in a floating market on a sunny afternoon."
@@ -51,7 +51,7 @@ export const locationInfo = [
     description: "Hand-woven Vietnamese basket with traditional patterns",
     location: "Hanoi, Vietnam",
     date: "2023-06-20",
-    modelPath: "/models/Vietnam.glb",
+    modelPath: "/models/Chou.glb",
     scale: 1.5,
     coordinates: [21.0285, 105.8542],
     travelNote: "Created by a village artisan using techniques passed down for generations."
