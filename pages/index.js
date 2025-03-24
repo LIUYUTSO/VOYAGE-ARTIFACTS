@@ -89,6 +89,7 @@ export default function Home() {
   return (
     <>
       <Head>
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
         <title>VOYAGE ARTIFACTS | Interactive 3D Travel Collection Showcase</title>
         {/* 动态更新标题和描述 */}
         {selectedLocation && (

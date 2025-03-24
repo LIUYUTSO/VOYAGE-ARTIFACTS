@@ -25,9 +25,16 @@ export default function Document() {
         <meta name="twitter:image" content="/og-image.jpg" />
         
         {/* 网站图标 */}
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico" />
+        <link 
+          rel="icon" 
+          href="/favicon.ico" 
+          type="image/x-icon"
+        />
+        <link 
+          rel="shortcut icon" 
+          href="/favicon.ico" 
+          type="image/x-icon"
+        />
         
         {/* 确保缓存刷新 */}
         <meta name="version" content="1.0" />
