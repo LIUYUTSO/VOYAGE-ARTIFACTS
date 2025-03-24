@@ -399,6 +399,20 @@ export default function Admin() {
     }
   };
 
+  const syncData = async () => {
+    try {
+      // 获取最新数据
+      const response = await fetch('/api/sync');
+      const serverData = await response.json();
+      // 更新本地存储
+      localStorage.setItem('collections', JSON.stringify(serverData));
+      // 刷新页面显示
+      setCollections(serverData);
+    } catch (error) {
+      console.error('同步失败:', error);
+    }
+  };
+
   if (!authorized) {
     return (
       <div className="max-w-md mx-auto mt-20 p-6 bg-white rounded-lg shadow-md">
@@ -722,6 +736,51 @@ export default function Admin() {
               className="px-4 py-2 rounded-full bg-gray-400 text-white hover:bg-gray-300 text-sm transition-all"
             >
               Auto-fix Models
+            </button>
+            <button 
+              onClick={() => {
+                const data = JSON.stringify(collections);
+                const blob = new Blob([data], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'voyage-artifacts-backup.json';
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+              className="px-4 py-2 rounded-full bg-gray-600 text-white hover:bg-gray-500 text-sm transition-all"
+            >
+              Export Data
+            </button>
+            
+            <input
+              type="file"
+              accept=".json"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onload = (event) => {
+                    try {
+                      const importedData = JSON.parse(event.target.result);
+                      setCollections(importedData);
+                      saveCollections(importedData);
+                      alert('Data imported successfully!');
+                    } catch (error) {
+                      alert('Error importing data: Invalid file format');
+                    }
+                  };
+                  reader.readAsText(file);
+                }
+              }}
+              style={{ display: 'none' }}
+              id="import-data"
+            />
+            <button 
+              onClick={() => document.getElementById('import-data').click()}
+              className="px-4 py-2 rounded-full bg-gray-600 text-white hover:bg-gray-500 text-sm transition-all"
+            >
+              Import Data
             </button>
           </div>
         </div>

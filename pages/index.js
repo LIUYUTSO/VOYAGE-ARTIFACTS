@@ -18,28 +18,36 @@ const useScrollPosition = () => {
   const [scrollPercent, setScrollPercent] = useState(0);
 
   useEffect(() => {
-    let rafId;
-    let ticking = false;
+    let rafId = null;
 
     const updateScrollPosition = () => {
       const scrollPosition = window.scrollY;
-      const percent = Math.min(scrollPosition / 100, 1);
+      const maxScroll = 100;
+      const percent = Math.min(scrollPosition / maxScroll, 1);
       setScrollPercent(percent);
-      ticking = false;
     };
 
     const handleScroll = () => {
-      if (!ticking) {
-        rafId = requestAnimationFrame(updateScrollPosition);
-        ticking = true;
+      if (rafId) {
+        return;  // 如果已经有待处理的动画帧，直接返回
       }
+      
+      rafId = requestAnimationFrame(() => {
+        updateScrollPosition();
+        rafId = null;
+      });
     };
 
     if (typeof window !== 'undefined') {
       window.addEventListener('scroll', handleScroll, { passive: true });
+      // 初始化滚动位置
+      updateScrollPosition();
+      
       return () => {
         window.removeEventListener('scroll', handleScroll);
-        cancelAnimationFrame(rafId);
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+        }
       };
     }
   }, []);
@@ -93,56 +101,73 @@ export default function Home() {
   return (
     <main className="relative">
       {/* 表頭區域 - 修改表头部分的代码 */}
-      <div className={`fixed top-0 left-0 right-0 w-full transition-all duration-500 z-50`} 
-           style={{
-             backgroundColor: `rgba(255, 255, 255, ${scrollPercent * 0.8})`,
-             backdropFilter: `blur(${scrollPercent * 8}px)`,
-             boxShadow: scrollPercent > 0 ? '0 1px 3px rgba(0,0,0,0.1)' : 'none'
-           }}>
-        <div className={`relative max-w-3xl mx-auto text-center px-4 transition-all duration-500`}
-             style={{
-               paddingTop: `${Math.max(48 - scrollPercent * 36, 12)}px`,
-               paddingBottom: `${Math.max(48 - scrollPercent * 36, 12)}px`
-             }}>
+      <div 
+        className="fixed top-0 left-0 right-0 w-full z-50"
+        style={{
+          backgroundColor: `rgba(255, 255, 255, ${scrollPercent * 0.8})`,
+          backdropFilter: `blur(${scrollPercent * 8}px)`,
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          boxShadow: scrollPercent > 0 
+            ? `0 1px 3px rgba(0,0,0,${scrollPercent * 0.1})` 
+            : 'none'
+        }}
+      >
+        <div 
+          className="relative max-w-3xl mx-auto text-center px-4"
+          style={{
+            paddingTop: `${Math.max(48 - scrollPercent * 36, 12)}px`,
+            paddingBottom: `${Math.max(48 - scrollPercent * 36, 12)}px`,
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+          }}
+        >
           {/* 主標題 */}
           <div className="flex justify-center items-baseline space-x-3">
-            <h1 className="font-bold tracking-tight transition-all duration-500"
-                style={{
-                  fontSize: `${Math.max(2.25 - scrollPercent * 0.75, 1.5)}rem`,
-                  color: scrollPercent > 0 
-                    ? 'rgb(17, 24, 39)' // 滚动时变为黑色
-                    : 'rgb(255, 255, 255)', // 初始为白色
-                  backgroundImage: scrollPercent > 0 
-                    ? 'none' 
-                    : 'linear-gradient(to right, rgb(255, 255, 255), rgb(229, 231, 235))', // 初始渐变为白色
-                  backgroundClip: scrollPercent > 0 ? 'border-box' : 'text',
-                  WebkitBackgroundClip: scrollPercent > 0 ? 'border-box' : 'text'
-                }}>
+            <h1 
+              className="font-bold tracking-tight"
+              style={{
+                fontSize: `${2.25 - (scrollPercent * 0.75)}rem`,  // 直接计算字体大小，不使用 Math.max
+                color: scrollPercent > 0 
+                  ? `rgb(17, 24, 39)` 
+                  : `rgb(255, 255, 255)`,
+                transition: 'all 0.15s linear',  // 使用更短的过渡时间和线性过渡
+                backgroundImage: scrollPercent > 0 
+                  ? 'none' 
+                  : 'linear-gradient(to right, rgb(255, 255, 255), rgb(229, 231, 235))',
+                backgroundClip: scrollPercent > 0 ? 'border-box' : 'text',
+                WebkitBackgroundClip: scrollPercent > 0 ? 'border-box' : 'text',
+                willChange: 'transform, font-size'  // 提示浏览器优化这些属性的变化
+              }}
+            >
               VOYAGE
             </h1>
-            <h1 className="font-bold tracking-tight transition-all duration-500"
-                style={{
-                  fontSize: `${Math.max(2.25 - scrollPercent * 0.75, 1.5)}rem`,
-                  color: scrollPercent > 0 
-                    ? 'rgb(17, 24, 39)' // 滚动时变为黑色
-                    : 'rgb(255, 255, 255)', // 初始为白色
-                  backgroundImage: scrollPercent > 0 
-                    ? 'none' 
-                    : 'linear-gradient(to right, rgb(255, 255, 255), rgb(229, 231, 235))', // 初始渐变为白色
-                  backgroundClip: scrollPercent > 0 ? 'border-box' : 'text',
-                  WebkitBackgroundClip: scrollPercent > 0 ? 'border-box' : 'text'
-                }}>
+            <h1 
+              className="font-bold tracking-tight"
+              style={{
+                fontSize: `${Math.max(2.25 - scrollPercent * 0.75, 1.5)}rem`,
+                color: scrollPercent > 0 
+                  ? `rgb(17, 24, 39)` 
+                  : `rgb(255, 255, 255)`,
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                backgroundImage: scrollPercent > 0 
+                  ? 'none' 
+                  : 'linear-gradient(to right, rgb(255, 255, 255), rgb(229, 231, 235))',
+                backgroundClip: scrollPercent > 0 ? 'border-box' : 'text',
+                WebkitBackgroundClip: scrollPercent > 0 ? 'border-box' : 'text'
+              }}
+            >
               ARTIFACTS
             </h1>
           </div>
           
           {/* 副標題和分隔線 */}
-          <div className="transition-all duration-500"
-               style={{
-                 opacity: 1 - scrollPercent * 2,
-                 height: scrollPercent >= 0.5 ? '0' : 'auto',
-                 overflow: 'hidden'
-               }}>
+          <div 
+            style={{
+              opacity: Math.max(1 - scrollPercent * 2, 0),
+              height: scrollPercent >= 0.5 ? '0' : 'auto',
+              overflow: 'hidden',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
+          >
             <div className="mt-2 w-16 h-[1px] bg-gradient-to-r from-gray-400 to-gray-200 mx-auto"></div>
             <p className="mt-4 text-gray-100 tracking-wide text-sm">
               Curated Travel Collections By ADAM LIU
@@ -161,7 +186,7 @@ export default function Home() {
           <div className="relative bg-white p-10 rounded-lg shadow-sm">
             {/* 更新後的名言內容 */}
             <p className="text-gray-700 text-lg leading-relaxed italic text-center mb-6">
-              Every journey leaves behind more than just memories—it carries with it objects that hold meaning, beauty, and untold stories. This collection is a personal archive of treasures gathered along my travels, each piece reflecting a moment, a place, and an experience worth sharing. Through this showcase, I invite you to explore these cherished finds and the stories they hold.
+            Every journey leaves behind meaningful treasures. This collection showcases objects from my travels, each holding a story, a place, and a moment worth sharing.
             </p>
             
             {/* 恢復愛心符號的分隔線 */}
