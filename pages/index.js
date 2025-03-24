@@ -86,7 +86,7 @@ export default function Home() {
   }
 
   return (
-    <main className="relative">
+    <main className="relative bg-black min-h-screen">
       {/* 表頭區域 - 修改表头部分的代码 */}
       <div 
         className="fixed top-0 left-0 right-0 w-full z-50"
