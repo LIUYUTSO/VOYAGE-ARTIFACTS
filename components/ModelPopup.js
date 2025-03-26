@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState, Suspense, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PresentationControls, useGLTF } from '@react-three/drei';
 
@@ -11,6 +11,10 @@ const Model = ({ modelPath, scale, onLoaded }) => {
   
   useEffect(() => {
     if (scene && onLoaded) {
+      // 删除这两行初始角度设置
+      // scene.rotation.x = Math.PI / 8; // 向下倾斜一点
+      // scene.rotation.y = Math.PI / 4; // 旋转45度
+      
       onLoaded();
     }
   }, [scene, onLoaded]);
@@ -22,6 +26,10 @@ const Model = ({ modelPath, scale, onLoaded }) => {
 const ModelViewer = ({ modelPath, scale = 1 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadProgress, setLoadProgress] = useState(0);
+  
+  // 添加这两行来创建引用
+  const ambientLight = useRef();
+  const directionalLight = useRef();
   
   // 处理模型加载完成事件
   const handleModelLoaded = () => {
@@ -44,16 +52,45 @@ const ModelViewer = ({ modelPath, scale = 1 }) => {
     }
   }, [isLoading, loadProgress]);
 
+  useEffect(() => {
+    // 增亮逻辑应该在 ambientLight 和 directionalLight 存在时执行
+    if (ambientLight.current && directionalLight.current) {
+      // 检查是否是 Cody 的作品，如果是则增加亮度
+      const isCodyArtwork = modelPath.includes('cody.glb');
+      
+      // 调整环境光 - 所有模型都比当前 cody 模型再亮一倍
+      ambientLight.current.intensity = isCodyArtwork ? 3.0 : 2.5; // 原来是 1.5 和 0.8
+      
+      // 调整主光源 - 所有模型都比当前 cody 模型再亮一倍
+      directionalLight.current.intensity = isCodyArtwork ? 2.4 : 2.0; // 原来是 1.2 和 0.8
+    }
+  }, [modelPath, scale, ambientLight, directionalLight]);
+
   return (
     <div className="relative w-full h-full">
-      <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
-        <ambientLight intensity={0.5} />
-        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-        <pointLight position={[-10, -10, -10]} />
+      <Canvas 
+        camera={{ position: [0, 0, -15], fov: 30 }}
+        style={{ background: '#ffffff' }}
+      >
+        <ambientLight ref={ambientLight} intensity={2.5} />
+        <directionalLight 
+          ref={directionalLight}
+          position={[10, 10, 5]} 
+          intensity={2.0}
+          castShadow 
+        />
+        
+        {/* 为所有模型添加额外的点光源 */}
+        <pointLight position={[-5, 5, 5]} intensity={1.4} />
+        <pointLight position={[5, -5, 5]} intensity={1.4} />
+        
         <Suspense fallback={null}>
           <Model modelPath={modelPath} scale={scale} onLoaded={handleModelLoaded} />
         </Suspense>
-        <OrbitControls />
+        <OrbitControls 
+        autoRotate={true}          // 自动旋转
+        autoRotateSpeed={3}        // 旋转速度
+        />
       </Canvas>
       
       {/* 黑白进度条加载指示器 */}
