@@ -264,6 +264,9 @@ export default function Home() {
             onClose={handleClose}
           />
         )}
+
+        {/* 添加 SpeedInsights 组件 */}
+        <SpeedInsights />
       </main>
     </>
   );
