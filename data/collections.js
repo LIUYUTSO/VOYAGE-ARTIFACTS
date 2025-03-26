@@ -55,6 +55,15 @@ export const locationInfo = [
     scale: 1.5,
     coordinates: [21.0285, 105.8542],
     travelNote: "Created by a village artisan using techniques passed down for generations."
+  },
+  {
+    name: "Cody's Artwork",
+    location: "Taiwan",
+    date: "2023-11-30",
+    modelPath: "/models/cody.glb",
+    scale: 2.5,
+    coordinates: [23.6978, 120.9605],
+    travelNotes: "An impressive artistic creation by Cody, showcasing unique visual aesthetics and creative expression. This remarkable artwork represents a fusion of traditional and contemporary elements."
   }
 ];
 
