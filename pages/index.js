@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import { FaInstagram } from 'react-icons/fa';
 import { locationInfo as defaultLocationInfo } from '../data/collections';
 import Head from 'next/head';
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 // 動態導入組件
 const Map = dynamic(() => import('../components/Map'), { 
