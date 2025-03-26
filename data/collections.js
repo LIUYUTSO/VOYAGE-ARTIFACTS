@@ -63,7 +63,7 @@ export const locationInfo = [
     modelPath: "/models/cody.glb",
     scale: 2.5,
     coordinates: [23.6978, 120.9605],
-    travelNotes: "An impressive artistic creation by Cody, showcasing unique visual aesthetics and creative expression. This remarkable artwork represents a fusion of traditional and contemporary elements."
+    travelNote: "An impressive artistic creation by Cody, showcasing unique visual aesthetics and creative expression. This remarkable artwork represents a fusion of traditional and contemporary elements."
   }
 ];
 
