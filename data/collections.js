@@ -64,6 +64,15 @@ export const locationInfo = [
     scale: 2.5,
     coordinates: [23.6978, 120.9605],
     travelNote: "An impressive artistic creation by Cody, showcasing unique visual aesthetics and creative expression. This remarkable artwork represents a fusion of traditional and contemporary elements."
+  },
+  {
+    name: "Desktop Soy Sauce Bottle",
+    location: "Kyushu, Japan",
+    date: "2023-10",
+    modelPath: "/models/kyushu.glb",
+    scale: 2.5,
+    coordinates: [33.5904, 130.4017],
+    travelNote: "A charming small soy sauce bottle acquired during a scenic road trip across Kyushu, Japan. This decorative piece captures the essence of traditional Japanese culinary culture in a miniature form."
   }
 ];
 
