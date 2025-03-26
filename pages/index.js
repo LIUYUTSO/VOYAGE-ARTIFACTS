@@ -189,12 +189,14 @@ export default function Home() {
             </div>
           </div>
           
-          {/* 地圖部分 - 增加與上方名言區域的間距 */}
-          <div className="map-container max-w-4xl mx-auto mt-16 mb-8 h-[500px] rounded-lg overflow-hidden relative bg-white z-0 shadow-md">
-            <Map 
-              locations={locationInfo} 
-              onSelectLocation={handleSelectLocation}
-            />
+          {/* 地圖部分 - 增加响应式左右留白，小屏幕部分再寬一點 */}
+          <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 mt-16 mb-8">
+            <div className="h-[500px] rounded-lg overflow-hidden relative bg-white z-0 shadow-md">
+              <Map 
+                locations={locationInfo} 
+                onSelectLocation={handleSelectLocation}
+              />
+            </div>
           </div>
 
           {/* Footer Content */}
