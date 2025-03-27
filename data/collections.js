@@ -17,11 +17,20 @@
 // 以下是完整的 locationInfo 数组，供主页和管理页面使用
 export const locationInfo = [
   {
+    name: "Table Salt",
+    location: "Tokyo, Japan",
+    date: "2024-10",
+    modelPath: "/models/Saltbottle.glb",
+    scale: 1,
+    coordinates: [35.6762, 139.6503], // 东京的坐标
+    travelNote: "An essential condiment found in every Japanese household, this elegant salt bottle embodies the Japanese philosophy of bringing beauty to everyday items. Its minimalist design reflects the perfect balance between functionality and aesthetics, making even the simplest dining table complete."
+  },
+  {
     name: "Desktop Soy Sauce Bottle",
     location: "Kyushu, Japan",
     date: "2023-10",
     modelPath: "/models/kyushu.glb",
-    scale: 2.5,
+    scale: 3,
     coordinates: [33.5904, 130.4017],
     travelNote: "A charming small soy sauce bottle acquired during a scenic road trip across Kyushu, Japan. This decorative piece captures the essence of traditional Japanese culinary culture in a miniature form."
   },
@@ -30,7 +39,7 @@ export const locationInfo = [
     location: "Taiwan",
     date: "2023-11-30",
     modelPath: "/models/cody.glb",
-    scale: 2.5,
+    scale: 2,
     coordinates: [23.6978, 120.9605],
     travelNote: "An impressive artistic creation by Cody, showcasing unique visual aesthetics and creative expression. This remarkable artwork represents a fusion of traditional and contemporary elements."
   }
