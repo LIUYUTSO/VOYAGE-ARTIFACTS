@@ -81,14 +81,17 @@ export default function Home() {
 
         {/* 主要內容區域 */}
         <div className="mt-4">
-          {/* 名言區域 - 添加响应式设计 */}
+          {/* 名言區域 - 优化移动端分段和字体大小 */}
           <div className="max-w-4xl mx-auto my-8 sm:my-16 px-4 sm:px-8">
             <div className="relative bg-white p-6 sm:p-10 rounded-lg shadow-sm">
-              {/* 更新名言内容的响应式设计 */}
-              <p className="text-gray-700 text-base sm:text-lg leading-relaxed italic text-center mb-4 sm:mb-6">
-                Every journey leaves behind meaningful treasures. 
-                <span className="block sm:inline"> This collection showcases objects from my travels, </span>
-                <span className="block sm:inline"> each holding a story, a place, and a moment worth sharing.</span>
+              {/* 更新名言内容的分段和字体大小 */}
+              <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed italic text-center mb-4 sm:mb-6">
+                <span className="block mb-3 sm:inline sm:mb-0">
+                  Every journey leaves behind meaningful treasures.
+                </span>
+                <span className="block sm:inline">
+                  This collection showcases objects from my travels, each holding a story, a place, and a moment worth sharing.
+                </span>
               </p>
               
               {/* 爱心符号分隔线 */}
