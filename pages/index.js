@@ -15,54 +15,11 @@ const ModelPopup = dynamic(() => import('../components/ModelPopup'), {
   ssr: false
 });
 
-// 修改回原来的 useScrollPosition hook
-const useScrollPosition = () => {
-  const [scrollPercent, setScrollPercent] = useState(0);
-
-  useEffect(() => {
-    let rafId;
-    let ticking = false;
-
-    const updateScrollPosition = () => {
-      const scrollPosition = window.scrollY;
-      const percent = Math.min(scrollPosition / 100, 1);
-      setScrollPercent(percent);
-      ticking = false;
-    };
-
-    const handleScroll = () => {
-      if (!ticking) {
-        rafId = requestAnimationFrame(updateScrollPosition);
-        ticking = true;
-      }
-    };
-
-    if (typeof window !== 'undefined') {
-      window.addEventListener('scroll', handleScroll, { passive: true });
-      
-      // 初始化滚动位置
-      handleScroll();
-
-      return () => {
-        window.removeEventListener('scroll', handleScroll);
-        if (rafId) {
-          cancelAnimationFrame(rafId);
-        }
-      };
-    }
-  }, []);
-
-  return scrollPercent;
-};
-
 export default function Home() {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isClosing, setIsClosing] = useState(false);
   const [locationInfo, setLocationInfo] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  // 使用自定义 Hook 替换原来的滚动监听逻辑
-  const scrollPercent = useScrollPosition();
 
   const handleClose = useCallback(() => {
     setIsClosing(true);
@@ -103,96 +60,53 @@ export default function Home() {
       </Head>
       <main className="relative bg-black min-h-screen">
         {/* 表頭區域 - 修改表头部分的代码 */}
-        <div 
-          className="fixed top-0 left-0 right-0 w-full z-50"
-          style={{
-            backgroundColor: `rgba(255, 255, 255, ${scrollPercent * 0.8})`,
-            backdropFilter: `blur(${scrollPercent * 8}px)`,
-            transition: 'background-color 0.2s ease-out, backdrop-filter 0.2s ease-out'
-          }}
-        >
-          <div 
-            className="relative max-w-3xl mx-auto text-center px-4"
-            style={{
-              transform: `scale(${1 - scrollPercent * 0.2})`,
-              padding: `${Math.max(48 - scrollPercent * 36, 12)}px 1rem`,
-              transition: 'transform 0.2s ease-out, padding 0.2s ease-out'
-            }}
-          >
-            {/* 主標題 */}
-            <div className="flex justify-center items-baseline space-x-3">
-              <h1 
-                className="font-bold tracking-tight"
-                style={{
-                  fontSize: `${Math.max(2.25 - scrollPercent * 0.75, 1.5)}rem`,
-                  color: scrollPercent > 0 
-                    ? `rgb(17, 24, 39)` 
-                    : 'rgb(255, 255, 255)',
-                  transition: 'font-size 0.2s ease-out, color 0.2s ease-out'
-                }}
-              >
-                VOYAGE
+        <div className="fixed top-0 left-0 right-0 w-full bg-black z-50">
+          <div className="max-w-6xl mx-auto px-6 py-4">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+              {/* 主标题 - 在移动端独占一行 */}
+              <h1 className="font-bold tracking-tight text-white text-xl sm:text-2xl text-center sm:text-left mb-2 sm:mb-0">
+                VOYAGE ARTIFACTS
               </h1>
-              <h1 
-                className="font-bold tracking-tight"
-                style={{
-                  fontSize: `${Math.max(2.25 - scrollPercent * 0.75, 1.5)}rem`,
-                  color: scrollPercent > 0 
-                    ? `rgb(17, 24, 39)` 
-                    : 'rgb(255, 255, 255)',
-                  transition: 'font-size 0.2s ease-out, color 0.2s ease-out'
-                }}
-              >
-                ARTIFACTS
-              </h1>
-            </div>
-            
-            {/* 副標題和分隔線 */}
-            <div 
-              style={{
-                opacity: Math.max(1 - scrollPercent * 2, 0),
-                height: scrollPercent >= 0.5 ? '0' : 'auto',
-                overflow: 'hidden',
-                transition: 'opacity 0.2s ease-out, height 0.2s ease-out'
-              }}
-            >
-              <div className="mt-2 w-16 h-[1px] bg-gradient-to-r from-gray-400 to-gray-200 mx-auto"></div>
-              <p className="mt-4 text-gray-100 tracking-wide text-sm">
+
+              {/* 副标题 - 在移动端独占一行 */}
+              <p className="text-white text-xs sm:text-sm tracking-wide text-center sm:text-right">
                 Curated Travel Collections By ADAM LIU
               </p>
             </div>
           </div>
         </div>
 
-        {/* 占位符 */}
-        <div style={{ height: `${Math.max(160 - scrollPercent * 96, 64)}px` }}></div>
+        {/* 调整占位符高度以适应两行布局 */}
+        <div className="h-20 sm:h-16"></div>
 
         {/* 主要內容區域 */}
         <div className="mt-4">
-          {/* 名言區域 - 更新文字並恢復愛心符號 */}
-          <div className="max-w-4xl mx-auto my-16 px-8">
-            <div className="relative bg-white p-10 rounded-lg shadow-sm">
-              {/* 更新後的名言內容 */}
-              <p className="text-gray-700 text-lg leading-relaxed italic text-center mb-6">
-              Every journey leaves behind meaningful treasures. This collection showcases objects from my travels, each holding a story, a place, and a moment worth sharing.
+          {/* 名言區域 - 添加响应式设计 */}
+          <div className="max-w-4xl mx-auto my-8 sm:my-16 px-4 sm:px-8">
+            <div className="relative bg-white p-6 sm:p-10 rounded-lg shadow-sm">
+              {/* 更新名言内容的响应式设计 */}
+              <p className="text-gray-700 text-base sm:text-lg leading-relaxed italic text-center mb-4 sm:mb-6">
+                Every journey leaves behind meaningful treasures. 
+                <span className="block sm:inline"> This collection showcases objects from my travels, </span>
+                <span className="block sm:inline"> each holding a story, a place, and a moment worth sharing.</span>
               </p>
               
-              {/* 恢復愛心符號的分隔線 */}
-              <div className="flex items-center justify-center mt-8">
-                <div className="h-px w-16 bg-gray-200"></div>
-                <div className="mx-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-gray-300">
+              {/* 爱心符号分隔线 */}
+              <div className="flex items-center justify-center mt-4 sm:mt-8">
+                <div className="h-px w-12 sm:w-16 bg-gray-200"></div>
+                <div className="mx-3 sm:mx-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3 sm:w-4 sm:h-4 text-gray-300">
                     <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
                   </svg>
                 </div>
-                <div className="h-px w-16 bg-gray-200"></div>
+                <div className="h-px w-12 sm:w-16 bg-gray-200"></div>
               </div>
             </div>
           </div>
           
-          {/* 地圖部分 - 增加响应式左右留白，小屏幕部分再寬一點 */}
+          {/* 地圖部分 - 修改高度响应式设计 */}
           <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 mt-16 mb-8">
-            <div className="h-[500px] rounded-lg overflow-hidden relative bg-white z-0 shadow-md">
+            <div className="h-[300px] sm:h-[400px] md:h-[500px] rounded-lg overflow-hidden relative bg-white z-0 shadow-md">
               <Map 
                 locations={locationInfo} 
                 onSelectLocation={handleSelectLocation}
