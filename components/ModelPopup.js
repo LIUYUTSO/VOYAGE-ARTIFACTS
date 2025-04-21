@@ -288,25 +288,14 @@ const ModelPopup = ({ selectedLocation, isClosing, onClose }) => {
               camera={{ position: [0, 0, 5], fov: 45 }}
               style={{ background: '#ffffff' }}
             >
-              <ambientLight intensity={2.5} /> {/* 增加全局光照强度 */}
+              <ambientLight intensity={2.5} />
               <directionalLight 
                 position={[5, 5, 5]} 
                 intensity={2.0} 
               />
-              <directionalLight 
-                position={[-5, -5, -5]} 
-                intensity={1.0} 
-              />
-              
-              {/* 添加额外的点光源以增强整体照明 */}
-              <pointLight position={[10, 10, 10]} intensity={0.5} />
-              <pointLight position={[-10, -10, -10]} intensity={0.5} />
-
-              {/* 确保模型居中显示 */}
               <Model 
                 modelPath={selectedLocation.modelPath} 
                 scale={selectedLocation.modelName === "Table Salt" ? 1.5 : selectedLocation.scale || 1} 
-                position={[0, 0, 0]} // 明确设置居中位置
               />
               <OrbitControls 
                 enableZoom={true}
