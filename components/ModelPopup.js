@@ -284,7 +284,36 @@ const ModelPopup = ({ selectedLocation, isClosing, onClose }) => {
         <div className="flex flex-col lg:flex-row h-full">
           {/* 3D 模型區 */}
           <div className="w-full lg:w-1/2 h-[300px] lg:h-[500px] bg-gray-50">
-            <ModelViewer modelPath={selectedLocation.modelPath} scale={selectedLocation.scale || 1} />
+            <Canvas 
+              camera={{ position: [0, 0, 5], fov: 45 }}
+              style={{ background: '#ffffff' }}
+            >
+              <ambientLight intensity={2.5} /> {/* 增加全局光照强度 */}
+              <directionalLight 
+                position={[5, 5, 5]} 
+                intensity={2.0} 
+              />
+              <directionalLight 
+                position={[-5, -5, -5]} 
+                intensity={1.0} 
+              />
+              
+              {/* 添加额外的点光源以增强整体照明 */}
+              <pointLight position={[10, 10, 10]} intensity={0.5} />
+              <pointLight position={[-10, -10, -10]} intensity={0.5} />
+
+              {/* 确保模型居中显示 */}
+              <Model 
+                modelPath={selectedLocation.modelPath} 
+                scale={selectedLocation.modelName === "Table Salt" ? 1.5 : selectedLocation.scale || 1} 
+                position={[0, 0, 0]} // 明确设置居中位置
+              />
+              <OrbitControls 
+                enableZoom={true}
+                autoRotate={true}
+                autoRotateSpeed={3}
+              />
+            </Canvas>
           </div>
           
           {/* 信息區 */}
