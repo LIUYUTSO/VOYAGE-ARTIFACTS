@@ -69,13 +69,13 @@ const ModelViewer = ({ modelPath, scale = 1 }) => {
   return (
     <div className="relative w-full h-full">
       <Canvas 
-        camera={{ position: [0, 0, -15], fov: 30 }}
+        camera={{ position: [0, 0, 5], fov: 45 }}
         style={{ background: '#ffffff' }}
       >
-        <ambientLight ref={ambientLight} intensity={2.5} />
+        <ambientLight ref={ambientLight} intensity={5.0} />
         <directionalLight 
           ref={directionalLight}
-          position={[10, 10, 5]} 
+          position={[5, 5, 5]} 
           intensity={2.0}
           castShadow 
         />
@@ -88,8 +88,10 @@ const ModelViewer = ({ modelPath, scale = 1 }) => {
           <Model modelPath={modelPath} scale={scale} onLoaded={handleModelLoaded} />
         </Suspense>
         <OrbitControls 
-        autoRotate={true}          // 自动旋转
-        autoRotateSpeed={3}        // 旋转速度
+          enableZoom={true}
+          autoRotate={true}
+          autoRotateSpeed={3}
+          target={[0, 0, 0]}
         />
       </Canvas>
       
@@ -288,19 +290,20 @@ const ModelPopup = ({ selectedLocation, isClosing, onClose }) => {
               camera={{ position: [0, 0, 5], fov: 45 }}
               style={{ background: '#ffffff' }}
             >
-              <ambientLight intensity={2.5} />
+              <ambientLight intensity={5.0} />
               <directionalLight 
                 position={[5, 5, 5]} 
-                intensity={2.0} 
+                intensity={2.0}
               />
               <Model 
                 modelPath={selectedLocation.modelPath} 
-                scale={selectedLocation.modelName === "Table Salt" ? 1.5 : selectedLocation.scale || 1} 
+                scale={1}
               />
               <OrbitControls 
                 enableZoom={true}
                 autoRotate={true}
                 autoRotateSpeed={3}
+                target={[0, 0, 0]}
               />
             </Canvas>
           </div>
