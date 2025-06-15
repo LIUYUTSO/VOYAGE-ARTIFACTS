@@ -21,19 +21,17 @@ const ModelPreview = dynamic(() => import('../components/ModelPreview'), {
   </div>
 });
 
+const Map = dynamic(() => import('../components/Map'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[400px] bg-gray-100 rounded-lg flex items-center justify-center">
+      Loading map...
+    </div>
+  )
+});
+
 // Default collections (replace with your own or load from localStorage)
 const defaultCollections = [
-  {
-    id: 1,
-    name: "Sakura Charm",
-    description: "A delicate cherry blossom-inspired artifact from Japan",
-    location: "Tokyo, Japan",
-    date: "2023/12/25",
-    modelPath: "/models/Chou.glb",
-    scale: 1.2,
-    coordinates: [35.6762, 139.6503],
-    travelNote: "Found this exquisite piece in a century-old craft shop in Asakusa."
-  }
   // Add more items as needed
 ];
 
@@ -65,45 +63,23 @@ export default function Admin() {
   useEffect(() => {
     // 从 collections.js 导入默认数据
     import('../data/collections').then(({ locationInfo }) => {
+      // 设置收藏品数据
       const formattedCollections = locationInfo.map((item, index) => ({
         id: index + 1,
         ...item
       }));
       setCollections(formattedCollections);
+
+      // 从 collections.js 中获取所有唯一的模型路径
+      const modelPaths = [...new Set(locationInfo.map(item => item.modelPath))];
+      setAvailableModels(modelPaths);
+      
+      setIsLoading(false);
+    }).catch(error => {
+      console.error('Error loading collections:', error);
       setIsLoading(false);
     });
   }, []);
-
-  useEffect(() => {
-    // 获取可用模型列表
-    const fetchModels = async () => {
-      try {
-        const response = await fetch('/api/getModels');
-        if (response.ok) {
-          const data = await response.json();
-          setAvailableModels(data.models || []);
-        }
-      } catch (error) {
-        console.error('Error fetching models:', error);
-      }
-    };
-    
-    fetchModels();
-  }, []);
-
-  useEffect(() => {
-    // 仅在客户端预加载模型
-    if (typeof window !== 'undefined' && availableModels.length > 0) {
-      // 动态导入预加载函数
-      import('../components/ModelPreview').then(module => {
-        if (module.preloadModels) {
-          // 预加载前5个模型或全部模型(如果少于5个)
-          const modelsToPreload = availableModels.slice(0, Math.min(5, availableModels.length));
-          module.preloadModels(modelsToPreload);
-        }
-      });
-    }
-  }, [availableModels]);
 
   const checkPassword = () => {
     if (password === '45636112') {
@@ -550,20 +526,17 @@ export default function Admin() {
           </div>
           
           {/* Map Selector Component */}
-          <div className="mb-6">
-            <div className="flex items-center mb-2">
-              <span className="w-1.5 h-1.5 bg-gray-700 rounded-full mr-2"></span>
-              <label className="text-sm font-medium text-gray-700">Geographic Location</label>
-            </div>
-            <div className="h-[350px] border border-gray-200 rounded-lg overflow-hidden shadow-inner">
-              <MapSelector 
-                coordinates={newItem.coordinates} 
-                onChange={(coords) => setNewItem({...newItem, coordinates: coords})}
+          <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 mt-8 mb-8">
+            <div className="h-[300px] sm:h-[400px] md:h-[500px] rounded-lg overflow-hidden relative bg-white z-0 shadow-md">
+              <Map 
+                locations={collections} 
+                onSelectLocation={(location) => {
+                  setNewItem({
+                    ...newItem,
+                    coordinates: location.coordinates || [0, 0]
+                  });
+                }}
               />
-            </div>
-            <div className="mt-2 flex justify-between text-xs text-gray-500">
-              <span>Latitude: {newItem.coordinates[0].toFixed(4)}</span>
-              <span>Longitude: {newItem.coordinates[1].toFixed(4)}</span>
             </div>
           </div>
           
@@ -689,34 +662,60 @@ export default function Admin() {
             </button>
             <button 
               onClick={() => {
-                const data = JSON.stringify(collections);
-                const blob = new Blob([data], { type: 'application/json' });
+                // 生成 collections.js 格式的内容
+                const collectionsContent = `export const locationInfo = ${JSON.stringify(collections, null, 2)};`;
+                
+                // 创建并下载文件
+                const blob = new Blob([collectionsContent], { type: 'text/javascript' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'voyage-artifacts-backup.json';
+                a.download = 'collections.js';
                 a.click();
                 URL.revokeObjectURL(url);
               }}
               className="px-4 py-2 rounded-full bg-gray-600 text-white hover:bg-gray-500 text-sm transition-all"
             >
-              Export Data
+              Export collections.js
             </button>
             
+            {/* 修改导入功能以处理 collections.js 文件 */}
             <input
               type="file"
-              accept=".json"
+              accept=".js,.json"
               onChange={(e) => {
                 const file = e.target.files[0];
                 if (file) {
                   const reader = new FileReader();
                   reader.onload = (event) => {
                     try {
-                      const importedData = JSON.parse(event.target.result);
-                      setCollections(importedData);
-                      alert('Data imported successfully!');
+                      let importedData;
+                      const content = event.target.result;
+                      
+                      // 尝试解析 collections.js 格式
+                      if (content.includes('export const locationInfo =')) {
+                        const dataString = content
+                          .replace('export const locationInfo =', '')
+                          .trim()
+                          .replace(/;$/, '');
+                        importedData = JSON.parse(dataString);
+                      } else {
+                        // 尝试解析 JSON 格式
+                        importedData = JSON.parse(content);
+                      }
+                      
+                      // 确保导入的数据有正确的格式
+                      if (Array.isArray(importedData)) {
+                        setCollections(importedData.map((item, index) => ({
+                          id: index + 1,
+                          ...item
+                        })));
+                        alert('Data imported successfully!');
+                      } else {
+                        throw new Error('Invalid data format');
+                      }
                     } catch (error) {
-                      alert('Error importing data: Invalid file format');
+                      alert('Error importing data: ' + error.message);
                     }
                   };
                   reader.readAsText(file);
@@ -729,7 +728,7 @@ export default function Admin() {
               onClick={() => document.getElementById('import-data').click()}
               className="px-4 py-2 rounded-full bg-gray-600 text-white hover:bg-gray-500 text-sm transition-all"
             >
-              Import Data
+              Import collections.js
             </button>
           </div>
         </div>
