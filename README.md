@@ -1,5 +1,5 @@
 # Travel Showcase Project
-<!-- Deployment Test 3: After GitHub Email Verification -->
+<!-- Deployment Test 4: Fixed Git Email (No quotes) -->
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
 
 ## Getting Started
