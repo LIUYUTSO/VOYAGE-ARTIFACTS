@@ -31,6 +31,9 @@ export default function Admin() {
     date: '',
     modelPath: '',
     scale: 1,
+    intensity: 1.5,
+    rotationY: 0,
+    autoRotateSpeed: 2,
     coordinates: [35.6762, 139.6503],
     travelNote: ''
   });
@@ -189,6 +192,9 @@ export default function Admin() {
       date: '',
       modelPath: '',
       scale: 1,
+      intensity: 1.5,
+      rotationY: 0,
+      autoRotateSpeed: 2,
       coordinates: [35.6762, 139.6503],
       travelNote: ''
     });
@@ -359,6 +365,52 @@ export default function Admin() {
                 />
               </div>
 
+              {/* 3D Display Engine Control Panel */}
+              <div className="bg-gray-50 p-6 rounded-3xl border border-gray-100 space-y-6">
+                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-black"></span>
+                  Display Engine Configuration
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Brightness</label>
+                      <span className="text-[10px] font-black text-black">{newItem.intensity}x</span>
+                    </div>
+                    <input
+                      type="range" min="0.5" max="4" step="0.1"
+                      value={newItem.intensity}
+                      onChange={e => setNewItem({ ...newItem, intensity: parseFloat(e.target.value) })}
+                      className="w-full accent-black cursor-pointer"
+                    />
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Initial Angle</label>
+                      <span className="text-[10px] font-black text-black">{newItem.rotationY}°</span>
+                    </div>
+                    <input
+                      type="range" min="0" max="360" step="1"
+                      value={newItem.rotationY}
+                      onChange={e => setNewItem({ ...newItem, rotationY: parseInt(e.target.value) })}
+                      className="w-full accent-black cursor-pointer"
+                    />
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Spin Speed</label>
+                      <span className="text-[10px] font-black text-black">{newItem.autoRotateSpeed}</span>
+                    </div>
+                    <input
+                      type="range" min="0" max="10" step="0.5"
+                      value={newItem.autoRotateSpeed}
+                      onChange={e => setNewItem({ ...newItem, autoRotateSpeed: parseFloat(e.target.value) })}
+                      className="w-full accent-black cursor-pointer"
+                    />
+                  </div>
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <label className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Travel Memoirs</label>
                 <textarea
@@ -430,7 +482,13 @@ export default function Admin() {
               {/* 3D Preview Overlay */}
               <div className="absolute top-6 left-6 w-64 h-64 bg-white/80 backdrop-blur-md rounded-3xl z-10 shadow-xl border border-white/50 overflow-hidden">
                 {newItem.modelPath ? (
-                  <ModelPreview modelPath={newItem.modelPath} scale={newItem.scale} />
+                  <ModelPreview
+                    modelPath={newItem.modelPath}
+                    scale={newItem.scale}
+                    intensity={newItem.intensity}
+                    rotationY={newItem.rotationY}
+                    autoRotateSpeed={newItem.autoRotateSpeed}
+                  />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center text-[10px] text-gray-200 font-bold uppercase tracking-widest px-8 text-center italic">Awaiting Asset</div>
                 )}

@@ -169,7 +169,13 @@ export default function Home() {
                     {/* Live 3D Preview inside Card */}
                     <div className="w-full h-full relative z-0 opacity-80 group-hover:opacity-100 transition-opacity duration-700">
                       {item.modelPath ? (
-                        <ModelPreview modelPath={item.modelPath} scale={item.scale || 1} />
+                        <ModelPreview
+                          modelPath={item.modelPath}
+                          scale={item.scale || 1}
+                          intensity={item.intensity || 1.5}
+                          rotationY={item.rotationY || 0}
+                          autoRotateSpeed={item.autoRotateSpeed || 2}
+                        />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-200 font-bold uppercase tracking-widest italic">Awaiting asset...</div>
                       )}

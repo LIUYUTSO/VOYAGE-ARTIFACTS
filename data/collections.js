@@ -23,6 +23,9 @@ export const locationInfo = [
     date: "2024-10",
     modelPath: "/models/Saltbottle.glb",
     scale: 1,
+    intensity: 1.5,
+    rotationY: 0,
+    autoRotateSpeed: 2,
     coordinates: [35.6762, 139.6503], // 东京的坐标
     travelNote: "An essential condiment found in every Japanese household, this elegant salt bottle embodies the Japanese philosophy of bringing beauty to everyday items. Its minimalist design reflects the perfect balance between functionality and aesthetics, making even the simplest dining table complete."
   },
@@ -33,6 +36,9 @@ export const locationInfo = [
     date: "2023-10",
     modelPath: "/models/kyushu.glb",
     scale: 3,
+    intensity: 1.5,
+    rotationY: 0,
+    autoRotateSpeed: 2,
     coordinates: [33.5904, 130.4017],
     travelNote: "A charming small soy sauce bottle acquired during a scenic road trip across Kyushu, Japan. This decorative piece captures the essence of traditional Japanese culinary culture in a miniature form."
   },
@@ -43,6 +49,9 @@ export const locationInfo = [
     date: "2023-11-30",
     modelPath: "/models/cody.glb",
     scale: 2,
+    intensity: 1.5,
+    rotationY: 0,
+    autoRotateSpeed: 2,
     coordinates: [23.6978, 120.9605],
     travelNote: "An impressive artistic creation by Cody, showcasing unique visual aesthetics and creative expression. This remarkable artwork represents a fusion of traditional and contemporary elements."
   },
@@ -53,6 +62,10 @@ export const locationInfo = [
     date: "2026-02",
     modelPath: "/models/tim_hortons_cup.glb", // Will be used when generate_model.sh finishes
     imagePath: "/images/tim_hortons_cup.svg", // Fallback if model doesn't exist yet or errors
+    scale: 1,
+    intensity: 1.5,
+    rotationY: 0,
+    autoRotateSpeed: 2,
     coordinates: [51.0447, -114.0719],
     travelNote: "A quintessential Canadian symbol. This Tim Hortons cup was a faithful companion during a snowy morning exploration of downtown Calgary. The warmth of the coffee and the familiar red cup are deeply tied to the Canadian experience."
   }
@@ -68,6 +81,9 @@ export const collections = locationInfo.map((item, index) => ({
   modelPath: item.modelPath,
   imagePath: item.imagePath,
   scale: item.scale || 1,
+  rotationY: item.rotationY || 0,
+  autoRotateSpeed: item.autoRotateSpeed || 2,
+  intensity: item.intensity || 1.5,
   coordinates: item.coordinates || [35.6762, 139.6503],
   travelNote: item.travelNote || ''
 }));

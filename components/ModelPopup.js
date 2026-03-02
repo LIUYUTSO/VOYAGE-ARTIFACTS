@@ -40,7 +40,13 @@ export default function ModelPopup({ selectedLocation, isClosing, onClose }) {
           </div>
 
           <div className="w-full h-full relative cursor-grab active:cursor-grabbing">
-            <ModelPreview modelPath={selectedLocation.modelPath} scale={selectedLocation.scale || 1} />
+            <ModelPreview
+              modelPath={selectedLocation.modelPath}
+              scale={selectedLocation.scale || 1}
+              intensity={selectedLocation.intensity || 1.5}
+              rotationY={selectedLocation.rotationY || 0}
+              autoRotateSpeed={selectedLocation.autoRotateSpeed || 2}
+            />
           </div>
 
           {/* Visual Guide Element */}
