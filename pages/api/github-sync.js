@@ -16,11 +16,15 @@ export default async function handler(req, res) {
     }
 
     try {
+        // GitHub API prefers path segments to be encoded individually, NOT the slashes.
+        const encodedPath = path.split('/').map(segment => encodeURIComponent(segment)).join('/');
+        console.log('Syncing path:', encodedPath);
+
         // 1. Get the current file SHA (if it exists) to allow updating
         let sha;
         try {
             const getFileRes = await fetch(
-                `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${encodeURIComponent(path)}`,
+                `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${encodedPath}`,
                 {
                     headers: {
                         Authorization: `Bearer ${GITHUB_TOKEN}`,
@@ -47,7 +51,7 @@ export default async function handler(req, res) {
 
         // 3. Push to GitHub
         const pushRes = await fetch(
-            `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${encodeURIComponent(path)}`,
+            `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${encodedPath}`,
             {
                 method: 'PUT',
                 headers: {
