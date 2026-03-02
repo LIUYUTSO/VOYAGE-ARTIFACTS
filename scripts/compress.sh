@@ -20,13 +20,16 @@ echo "--- VOYAGE ASSET OPTIMIZER ---"
 echo "Target: $FILE"
 echo "Original size: $(du -h "$FILE" | cut -f1)"
 
-# Use npx to run gltf-pipeline without global installation
-# -d enables Draco compression
-# -b keeps it as a binary .glb
-OUTPUT="compressed_${FILE}"
+# Use npx to run gltf-pipeline with more aggressive settings
+# -d: Draco compression
+# -b: Binary output
+# --draco.compressionLevel 10: Max compression level
+# --stats: Show detailed statistics
+BASENAME=$(basename "$FILE")
+OUTPUT="compressed_${BASENAME}"
 
-echo "Optimizing... (This may take a few seconds)"
-npx -y gltf-pipeline -i "$FILE" -o "$OUTPUT" -d -b
+echo "Optimizing... (Applying Draco + Aggressive compression)"
+npx -y gltf-pipeline -i "$FILE" -o "$OUTPUT" -d --draco.compressionLevel 10 -b
 
 if [ $? -eq 0 ]; then
     echo "Success! Compressed version created: $OUTPUT"
