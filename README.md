@@ -1,5 +1,5 @@
 # Travel Showcase Project
-<!-- Deployment Test: Native Vercel-GitHub Integration -->
+<!-- Deployment Test 2: After Vercel Re-connection -->
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
 
 ## Getting Started
