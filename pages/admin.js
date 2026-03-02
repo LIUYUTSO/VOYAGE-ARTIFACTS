@@ -74,11 +74,50 @@ export default function Admin() {
   // --- Biometric (WebAuthn) Logic ---
   const [hasBiometrics, setHasBiometrics] = useState(false);
 
+  const authenticateBiometrics = async () => {
+    try {
+      if (typeof window === 'undefined') return;
+      const credIdBase64 = localStorage.getItem('voyage_cred_id');
+      if (!credIdBase64) return;
+
+      const credentialId = Uint8Array.from(atob(credIdBase64), c => c.charCodeAt(0));
+      const challenge = new Uint8Array(32);
+      window.crypto.getRandomValues(challenge);
+
+      const assertionOptions = {
+        publicKey: {
+          challenge: challenge,
+          allowCredentials: [{
+            id: credentialId,
+            type: 'public-key',
+            transports: ['internal']
+          }],
+          userVerification: "required",
+          timeout: 60000
+        }
+      };
+
+      const assertion = await navigator.credentials.get(assertionOptions);
+      if (assertion) {
+        setAuthorized(true);
+      }
+    } catch (err) {
+      console.error('Biometric auth failed:', err);
+      // We don't alert here to avoid annoying popups if the system dialog is dismissed
+    }
+  };
+
   useEffect(() => {
     // Check if device already has a registered credential
     if (typeof window !== 'undefined') {
       const credId = localStorage.getItem('voyage_cred_id');
-      setHasBiometrics(!!credId);
+      if (credId) {
+        setHasBiometrics(true);
+        // Automatically trigger biometric login if not authorized
+        if (!authorized) {
+          authenticateBiometrics();
+        }
+      }
     }
   }, []);
 
@@ -114,38 +153,6 @@ export default function Admin() {
     } catch (err) {
       console.error('Biometric registration failed:', err);
       alert('Registration failed: ' + err.message);
-    }
-  };
-
-  const authenticateBiometrics = async () => {
-    try {
-      const credIdBase64 = localStorage.getItem('voyage_cred_id');
-      if (!credIdBase64) return;
-
-      const credentialId = Uint8Array.from(atob(credIdBase64), c => c.charCodeAt(0));
-      const challenge = new Uint8Array(32);
-      window.crypto.getRandomValues(challenge);
-
-      const assertionOptions = {
-        publicKey: {
-          challenge: challenge,
-          allowCredentials: [{
-            id: credentialId,
-            type: 'public-key',
-            transports: ['internal']
-          }],
-          userVerification: "required",
-          timeout: 60000
-        }
-      };
-
-      const assertion = await navigator.credentials.get(assertionOptions);
-      if (assertion) {
-        setAuthorized(true);
-      }
-    } catch (err) {
-      console.error('Biometric auth failed:', err);
-      alert('Authentication failed: ' + err.message);
     }
   };
 
