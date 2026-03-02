@@ -185,6 +185,11 @@ export default function Admin() {
     const file = e.target.files[0];
     if (!file) return;
 
+    if (file.size > 4 * 1024 * 1024) {
+      alert(`File too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Vercel limits uploads to 4.5MB via API. Please use a smaller model.`);
+      return;
+    }
+
     if (!confirm(`Confirm upload ${file.name} to GitHub cloud?`)) return;
 
     setIsSyncing(true);
@@ -193,7 +198,12 @@ export default function Admin() {
     const readFileAsBase64 = (file) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onload = () => {
+          const result = reader.result;
+          const base64 = result.split(',')[1];
+          if (!base64) reject(new Error('Failed to parse file content as base64'));
+          resolve(base64);
+        };
         reader.onerror = (error) => reject(error);
         reader.readAsDataURL(file);
       });

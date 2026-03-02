@@ -20,7 +20,7 @@ export default async function handler(req, res) {
         let sha;
         try {
             const getFileRes = await fetch(
-                `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`,
+                `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${encodeURIComponent(path)}`,
                 {
                     headers: {
                         Authorization: `Bearer ${GITHUB_TOKEN}`,
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
 
         // 3. Push to GitHub
         const pushRes = await fetch(
-            `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`,
+            `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${encodeURIComponent(path)}`,
             {
                 method: 'PUT',
                 headers: {
