@@ -15,11 +15,17 @@ const ModelPopup = dynamic(() => import('../components/ModelPopup'), {
   ssr: false
 });
 
+const ModelPreview = dynamic(() => import('../components/ModelPreview'), {
+  ssr: false,
+  loading: () => <div className="w-full h-full bg-gray-50 animate-pulse flex items-center justify-center text-gray-200 text-[8px] font-black uppercase tracking-widest">Warping Asset...</div>
+});
+
 export default function Home() {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isClosing, setIsClosing] = useState(false);
   const [locationInfo, setLocationInfo] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [scrollY, setScrollY] = useState(0);
 
   const handleClose = useCallback(() => {
     setIsClosing(true);
@@ -31,6 +37,13 @@ export default function Home() {
 
   const handleSelectLocation = useCallback((location) => {
     setSelectedLocation(location);
+  }, []);
+
+  // Handle scroll for parallax
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Load initial data
@@ -56,9 +69,9 @@ export default function Home() {
         <meta name="description" content="Explore a curated collection of travel artifacts in immersive 3D. Each object tells a story of a place, a moment, and a journey." />
       </Head>
 
-      <main className="relative bg-[#fafafe] min-h-screen font-sans selection:bg-black selection:text-white">
+      <main className="relative bg-[#fafafe] min-h-screen font-sans selection:bg-black selection:text-white overflow-x-hidden">
 
-        {/* Unified Navigation - Match Admin Style */}
+        {/* Unified Navigation */}
         <header className="fixed top-0 left-0 right-0 h-20 bg-black z-[100] flex items-center justify-between px-8 sm:px-12 shadow-2xl shadow-black/20">
           <div className="flex flex-col">
             <h1 className="text-white font-black tracking-tighter text-xl leading-none italic">VOYAGE ARTIFACTS</h1>
@@ -74,17 +87,35 @@ export default function Home() {
 
         <div className="h-20"></div>
 
-        {/* Premium Hero Section */}
-        <section className="max-w-[1400px] mx-auto px-8 py-20 lg:py-32 flex flex-col items-center text-center">
-          <div className="bg-black text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.3em] mb-8 animate-fade-in shadow-xl shadow-black/5">
-            Now Live: Interactive Collection v2.0
+        {/* Premium Hero Section with Parallax */}
+        <section className="max-w-[1400px] mx-auto px-8 py-20 lg:py-40 flex flex-col items-center text-center relative pointer-events-none">
+          <div
+            className="bg-black text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.3em] mb-12 animate-fade-in shadow-xl shadow-black/5 pointer-events-auto"
+            style={{ transform: `translateY(${scrollY * 0.1}px)` }}
+          >
+            Now Live: Interactive Collection v2.1
           </div>
-          <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tightest leading-[0.9] text-black mb-10 max-w-5xl italic uppercase">
-            Explore the stories <br />
-            <span className="text-gray-200">left behind by time.</span>
+
+          <h2 className="text-6xl md:text-8xl lg:text-[10rem] font-black tracking-tightest leading-[0.8] text-black mb-12 max-w-6xl italic uppercase relative">
+            <span
+              className="block relative z-20"
+              style={{ transform: `translateX(${scrollY * -0.15}px)` }}
+            >
+              Explore the stories
+            </span>
+            <span
+              className="block text-gray-400 mt-4 opacity-70"
+              style={{ transform: `translateX(${scrollY * 0.25}px)` }}
+            >
+              left behind by time.
+            </span>
           </h2>
-          <div className="max-w-3xl bg-white border border-gray-100 p-8 sm:p-12 rounded-[3.5rem] shadow-2xl shadow-black/[0.03] mt-4 relative overflow-hidden group">
-            <p className="text-gray-500 text-lg md:text-xl leading-relaxed font-medium italic relative z-10">
+
+          <div
+            className="max-w-3xl bg-white border border-gray-100 p-8 sm:p-12 rounded-[3.5rem] shadow-2xl shadow-black/[0.03] mt-12 relative overflow-hidden group pointer-events-auto"
+            style={{ transform: `translateY(${scrollY * -0.05}px)` }}
+          >
+            <p className="text-gray-600 text-lg md:text-xl leading-relaxed font-semibold italic relative z-10 transition-colors group-hover:text-black duration-500">
               "Every journey leaves behind meaningful treasures. This digital vault showcases objects from my travels, each holding a fragment of the destination, the culture, and the moment."
             </p>
             <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-gray-50 rounded-full group-hover:scale-110 transition-transform duration-1000"></div>
@@ -92,10 +123,10 @@ export default function Home() {
         </section>
 
         {/* Global Map Display */}
-        <section className="max-w-[1500px] mx-auto px-8 mb-32">
-          <div className="h-[500px] md:h-[650px] bg-white rounded-[4rem] overflow-hidden shadow-2xl shadow-black/[0.05] border border-white/50 relative p-4 group">
+        <section className="max-w-[1500px] mx-auto px-8 mb-40">
+          <div className="h-[500px] md:h-[700px] bg-white rounded-[4rem] overflow-hidden shadow-2xl shadow-black/[0.05] border border-white/50 relative p-4 group">
             <div className="absolute top-10 left-10 z-10 bg-black/90 backdrop-blur-md text-white px-6 py-4 rounded-3xl shadow-2xl border border-white/10 max-w-[200px] group-hover:-translate-y-2 transition-transform duration-500">
-              <p className="text-[10px] font-black uppercase tracking-widest mb-1 text-gray-400">Tactical Map</p>
+              <p className="text-[10px] font-black uppercase tracking-widest mb-1 text-gray-500">Tactical Map</p>
               <p className="text-xs font-bold leading-tight">Interact with artifacts across the globe.</p>
             </div>
             <div className="w-full h-full rounded-[3rem] overflow-hidden grayscale-[0.3] contrast-[0.9] hover:grayscale-0 transition-all duration-1000">
@@ -107,50 +138,55 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Gallery Grid - Match Admin Inventory Style */}
+        {/* Gallery Grid - Integrated 3D Previews */}
         <section className="max-w-[1400px] mx-auto px-8 pb-40">
-          <div className="flex items-end justify-between mb-16 px-4">
+          <div className="flex items-end justify-between mb-20 px-4">
             <div className="space-y-2">
-              <h3 className="text-4xl font-black uppercase tracking-tighter leading-none italic">Artifact Highlights</h3>
-              <p className="text-xs text-gray-400 font-bold tracking-[0.2em] uppercase">Latest Discoveries Cataloged</p>
+              <h3 className="text-5xl font-black uppercase tracking-tighter leading-none italic">Collection Highlights</h3>
+              <p className="text-xs text-gray-500 font-bold tracking-[0.2em] uppercase">High Resolution Artifact Manifest</p>
             </div>
             <div className="h-0.5 flex-1 mx-12 bg-gray-100 mb-2 hidden md:block"></div>
             <div className="text-right">
-              <p className="text-3xl font-black italic text-gray-200">{locationInfo.length}</p>
-              <p className="text-[10px] font-black uppercase text-gray-300">Total Entries</p>
+              <p className="text-4xl font-black italic text-gray-300">{locationInfo.length}</p>
+              <p className="text-[10px] font-black uppercase text-gray-400">Total Records</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
             {locationInfo.map((item, index) => (
               <div
                 key={index}
                 onClick={() => handleSelectLocation(item)}
-                className="group bg-white rounded-[2.5rem] border border-gray-100 p-8 shadow-sm hover:shadow-2xl hover:shadow-black/[0.04] transition-all duration-500 cursor-pointer flex flex-col justify-between"
+                className="group bg-white rounded-[3rem] border border-gray-100 p-8 shadow-sm hover:shadow-2xl hover:shadow-black/[0.06] transition-all duration-700 cursor-pointer flex flex-col justify-between"
               >
-                <div className="space-y-6">
-                  <div className="aspect-square bg-gray-50 rounded-3xl overflow-hidden relative flex items-center justify-center">
-                    <div className="absolute top-4 left-4 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest z-10 border border-white/50">
-                      0{index + 1}
+                <div className="space-y-8">
+                  <div className="aspect-square bg-gray-50/50 rounded-[2.5rem] overflow-hidden relative group/canvas">
+                    {/* Artifact Index */}
+                    <div className="absolute top-6 left-6 bg-white shadow-xl px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest z-10 border border-gray-50 text-black group-hover:bg-black group-hover:text-white transition-colors duration-500">
+                      Record 0{index + 1}
                     </div>
-                    {item.modelPath ? (
-                      <div className="text-[9px] text-gray-300 font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0 duration-500">
-                        Render Available
+
+                    {/* Live 3D Preview inside Card */}
+                    <div className="w-full h-full relative z-0 opacity-80 group-hover:opacity-100 transition-opacity duration-700">
+                      {item.modelPath ? (
+                        <ModelPreview modelPath={item.modelPath} scale={item.scale || 1} />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-200 font-bold uppercase tracking-widest italic">Awaiting asset...</div>
+                      )}
+                    </div>
+
+                    <div className="absolute inset-x-0 bottom-0 p-8 opacity-0 group-hover:opacity-100 transition-all translate-y-6 group-hover:translate-y-0 duration-700 z-10 pointer-events-none">
+                      <div className="w-full bg-black text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-2xl shadow-black/20">
+                        Examine in detail <FaArrowRight size={10} />
                       </div>
-                    ) : (
-                      <div className="w-2 h-2 rounded-full bg-gray-200"></div>
-                    )}
-                    <div className="absolute inset-x-0 bottom-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-500">
-                      <button className="w-full bg-black text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2">
-                        View in 3D <FaArrowRight size={10} />
-                      </button>
                     </div>
                   </div>
-                  <div>
-                    <h4 className="text-2xl font-black uppercase tracking-tighter leading-none group-hover:underline decoration-4 underline-offset-8 transition-all">{item.name}</h4>
-                    <div className="flex items-center gap-3 mt-4">
-                      <p className="text-[10px] font-black text-gray-300 bg-gray-50 px-3 py-1.5 rounded-lg uppercase tracking-widest leading-none">{item.location}</p>
-                      <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest leading-none border-l border-gray-200 pl-3">Cataloged {item.date}</p>
+
+                  <div className="px-2">
+                    <h4 className="text-3xl font-black uppercase tracking-tightest leading-none text-black mb-4 group-hover:underline decoration-4 underline-offset-8 transition-all">{item.name}</h4>
+                    <div className="flex items-center gap-3">
+                      <p className="text-[10px] font-black text-white bg-black px-4 py-2 rounded-xl uppercase tracking-widest leading-none shadow-lg shadow-black/5">{item.location}</p>
+                      <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest leading-none pl-3 border-l border-gray-200">Cataloged {item.date}</p>
                     </div>
                   </div>
                 </div>
@@ -159,49 +195,49 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Global Footer - Unified Branding */}
-        <footer className="bg-black text-white pt-24 pb-12 rounded-t-[5rem]">
+        {/* Global Footer */}
+        <footer className="bg-black text-white pt-32 pb-16 rounded-t-[6rem] relative z-10">
           <div className="max-w-[1400px] mx-auto px-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-20 mb-20">
-              <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-24 mb-24">
+              <div className="space-y-10">
                 <div>
-                  <h2 className="text-4xl font-black tracking-tightest uppercase italic leading-none">VOYAGE <br /><span className="text-gray-600">ARTIFACTS</span></h2>
-                  <p className="text-gray-500 text-xs font-bold tracking-[0.35em] mt-3 uppercase">Experimental Journey Digital Record</p>
+                  <h2 className="text-5xl font-black tracking-tightest uppercase italic leading-none">VOYAGE <br /><span className="text-gray-700">ARTIFACTS</span></h2>
+                  <p className="text-gray-600 text-xs font-bold tracking-[0.4em] mt-4 uppercase">Experimental Journey Digital Record</p>
                 </div>
-                <p className="text-gray-400 leading-relaxed font-medium text-lg max-w-md italic">
-                  This archive documents artifacts from global expeditions, blending 3D visualization with personal storytelling. Created to hone digital narrative skills.
+                <p className="text-gray-400 leading-relaxed font-semibold text-xl max-w-lg italic opacity-80">
+                  This archive documents curated artifacts from global expeditions, blending interactive 3D visualization with deep personal storytelling.
                 </p>
               </div>
 
               <div className="flex flex-col md:items-end justify-between">
-                <div className="space-y-6 md:text-right">
-                  <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-600 underline decoration-2 underline-offset-8 mb-4">Transmission Channel</p>
+                <div className="space-y-8 md:text-right">
+                  <p className="text-[10px] font-black uppercase tracking-[0.5em] text-gray-700 underline decoration-2 underline-offset-8 mb-6">Transmission Channel</p>
                   <div className="flex md:justify-end">
                     <a
                       href="https://www.instagram.com/adam.liou/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-16 h-16 rounded-[2rem] bg-zinc-900 border border-zinc-800 flex items-center justify-center text-white hover:bg-white hover:text-black hover:scale-110 transition-all duration-500 shadow-2xl"
+                      className="w-20 h-20 rounded-[2.5rem] bg-zinc-900 border border-zinc-800 flex items-center justify-center text-white hover:bg-white hover:text-black hover:scale-110 transition-all duration-700 shadow-2xl group"
                       aria-label="Instagram"
                     >
-                      <FaInstagram size={24} />
+                      <FaInstagram size={28} className="group-hover:rotate-12 transition-transform duration-500" />
                     </a>
                   </div>
                 </div>
-                <div className="mt-20 md:mt-0 text-[9px] font-black text-gray-700 uppercase tracking-widest border border-zinc-900 px-6 py-3 rounded-full">
-                  Design Language System: Clean Industrial v2.1
+                <div className="mt-20 md:mt-0 text-[10px] font-black text-gray-500 uppercase tracking-[0.3em] border border-zinc-900 px-8 py-4 rounded-full bg-zinc-900/50">
+                  Design System: Premium Industrial v2.2
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-zinc-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-xs font-bold text-gray-600 uppercase tracking-[0.2em]">
+            <div className="border-t border-zinc-900 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
+              <p className="text-xs font-bold text-gray-700 uppercase tracking-[0.3em]">
                 &copy; {new Date().getFullYear()} VOYAGE ARTIFACTS / ALL SYSTEMS NOMINAL
               </p>
-              <div className="flex gap-6 text-[10px] font-black text-gray-800 uppercase tracking-widest">
-                <span>Creative Archive</span>
-                <span>Personal Project</span>
-                <span>v2.0 Revision</span>
+              <div className="flex gap-10 text-[10px] font-black text-gray-800 uppercase tracking-[0.4em]">
+                <span className="hover:text-white transition-colors cursor-default">Archive Entry</span>
+                <span className="hover:text-white transition-colors cursor-default">Adam Liou</span>
+                <span className="hover:text-white transition-colors cursor-default">Revision 03</span>
               </div>
             </div>
           </div>
@@ -226,12 +262,14 @@ export default function Home() {
         }
         body { background-color: #fafafe; cursor: crosshair; }
         ::selection { background: #000; color: #fff; }
+        ::-webkit-scrollbar { width: 0; }
         @keyframes fade-in {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade-in { animation: fade-in 1s ease-out forwards; }
-        .tracking-tightest { letter-spacing: -0.05em; }
+        .animate-fade-in { animation: fade-in 1.5s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+        .tracking-tightest { letter-spacing: -0.06em; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
       `}</style>
     </>
   );
