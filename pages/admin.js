@@ -261,10 +261,33 @@ export default function Admin() {
         {/* Left Column: Form (7 Cols) */}
         <div className="lg:col-span-7 space-y-8">
           <section className="bg-white p-8 sm:p-10 rounded-3xl shadow-sm border border-gray-100">
-            <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
-              <span className="w-1.5 h-6 bg-black rounded-full"></span>
-              {editMode ? 'Edit Artifact Information' : 'Catalog New Artifact'}
-            </h2>
+            <div className="flex flex-col md:flex-row gap-8 mb-8">
+              <div className="flex-1">
+                <h2 className="text-2xl font-bold mb-2 flex items-center gap-3">
+                  <span className="w-1.5 h-6 bg-black rounded-full"></span>
+                  {editMode ? 'Edit Artifact Information' : 'Catalog New Artifact'}
+                </h2>
+                <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest ml-4 italic">Artifact ID: {editMode ? editId : 'NEW_ENTRY'}</p>
+              </div>
+
+              {/* Integrated Form 3D Preview */}
+              <div className="w-full md:w-48 h-48 bg-gray-50 rounded-3xl border border-gray-100 overflow-hidden shadow-sm relative group">
+                <div className="absolute inset-0 z-10 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none flex items-center justify-center">
+                  <span className="text-[8px] font-black text-white px-3 py-1 bg-black rounded-full uppercase tracking-widest">Live Engine</span>
+                </div>
+                {newItem.modelPath ? (
+                  <ModelPreview
+                    modelPath={newItem.modelPath}
+                    scale={newItem.scale}
+                    intensity={newItem.intensity}
+                    rotationY={newItem.rotationY}
+                    autoRotateSpeed={newItem.autoRotateSpeed}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-[8px] text-gray-200 font-bold uppercase tracking-[0.2em] text-center px-4 italic">Awaiting Asset</div>
+                )}
+              </div>
+            </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -441,16 +464,28 @@ export default function Admin() {
               {collections.map(item => (
                 <div key={item.id} className="group bg-white border border-gray-100 p-6 rounded-3xl flex flex-col justify-between hover:shadow-xl hover:shadow-black/[0.02] transition-all">
                   <div className="space-y-4">
-                    <div className="w-full h-32 bg-gray-50 rounded-2xl overflow-hidden flex items-center justify-center relative">
+                    <div className="w-full h-40 bg-gray-50 rounded-2xl overflow-hidden flex items-center justify-center relative group/inner">
                       {item.modelPath ? (
-                        <div className="text-[10px] text-gray-300 font-bold uppercase tracking-widest">{item.modelPath.split('/').pop()}</div>
+                        <div className="w-full h-full opacity-60 group-hover/inner:opacity-100 transition-opacity">
+                          <ModelPreview
+                            modelPath={item.modelPath}
+                            scale={item.scale || 1}
+                            intensity={item.intensity || 1.5}
+                            rotationY={item.rotationY || 0}
+                            autoRotateSpeed={item.autoRotateSpeed || 2}
+                          />
+                        </div>
                       ) : (
                         <div className="text-[10px] text-gray-200 font-bold">NO MODEL</div>
                       )}
                     </div>
                     <div>
-                      <h4 className="font-bold text-lg text-gray-900">{item.name}</h4>
-                      <p className="text-[11px] text-gray-400 font-bold tracking-wider uppercase mt-1">{item.location} • {item.date}</p>
+                      <h4 className="font-bold text-lg text-gray-900 group-hover:text-black transition-colors">{item.name}</h4>
+                      <p className="text-[11px] text-gray-400 font-black tracking-widest uppercase mt-1 flex items-center gap-2">
+                        <span className="px-2 py-0.5 bg-gray-100 rounded-md text-gray-600">{item.location}</span>
+                        <span className="opacity-50">/</span>
+                        <span>{item.date}</span>
+                      </p>
                     </div>
                   </div>
                   <div className="flex gap-2 mt-6">
