@@ -3,10 +3,6 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 
 // Dynamic imports for performance and SSR safety
-const Map = dynamic(() => import('../components/Map'), {
-  ssr: false,
-  loading: () => <div className="h-full bg-gray-50 animate-pulse flex items-center justify-center text-gray-400 rounded-xl">Initializing Map...</div>
-});
 
 const ModelPreview = dynamic(() => import('../components/ModelPreview'), {
   ssr: false,
@@ -132,8 +128,15 @@ export default function Admin() {
         if (res.ok) {
           alert('Model uploaded directly to GitHub! Vercel will rebuild soon.');
           const newModelPath = `/models/${file.name}`;
+          // Immediately update both available models list and the current form selection
+          setAvailableModels(prev => {
+            const updated = [...prev];
+            if (!updated.includes(newModelPath)) {
+              updated.push(newModelPath);
+            }
+            return updated;
+          });
           setNewItem(prev => ({ ...prev, modelPath: newModelPath }));
-          setAvailableModels(prev => [...new Set([...prev, newModelPath])]);
         } else {
           throw new Error(data.error || 'Upload failed');
         }
@@ -241,7 +244,7 @@ export default function Admin() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans pb-20 pt-24">
       {/* Header - Voyage Clean Style */}
-      <header className="fixed top-0 left-0 right-0 h-20 bg-black z-50 flex items-center justify-between px-8 sm:px-12 backdrop-blur-md bg-opacity-95">
+      <header className="fixed top-0 left-0 right-0 h-20 bg-black z-40 flex items-center justify-between px-8 sm:px-12 backdrop-blur-md bg-opacity-95">
         <div className="flex flex-col">
           <h1 className="text-white font-bold tracking-tight text-xl leading-none">VOYAGE CMS</h1>
           <p className="text-gray-400 text-[10px] tracking-widest mt-1 uppercase">Curated Travel Collections</p>
@@ -257,10 +260,9 @@ export default function Admin() {
         </div>
       </header>
 
-      <main className="px-6 sm:px-12 max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-
-        {/* Left Column: Form (7 Cols) */}
-        <div className="lg:col-span-7 space-y-8">
+      <main className="px-6 sm:px-12 max-w-[1000px] mx-auto space-y-12">
+        {/* Main Content: Form */}
+        <div className="space-y-8">
           <section className="bg-white p-8 sm:p-10 rounded-3xl shadow-sm border border-gray-100">
             <div className="flex flex-col md:flex-row gap-8 mb-8">
               <div className="flex-1">
@@ -306,10 +308,11 @@ export default function Admin() {
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Extraction Date</label>
                   <input
-                    type="date"
+                    type="text"
                     value={newItem.date}
                     onChange={e => setNewItem({ ...newItem, date: e.target.value })}
-                    className="w-full bg-gray-50 border-2 border-gray-50 rounded-2xl px-5 py-3.5 focus:border-black focus:bg-white outline-none transition-all font-semibold text-gray-900"
+                    placeholder="YYYY-MM (e.g. 2024-10)"
+                    className="w-full bg-gray-50 border-2 border-gray-50 rounded-2xl px-5 py-3.5 focus:border-black focus:bg-white outline-none transition-all font-semibold text-gray-900 placeholder:text-gray-200"
                     required
                   />
                 </div>
@@ -458,10 +461,23 @@ export default function Admin() {
             </form>
           </section>
 
+          {/* Repository Dashboard Summary */}
+          <section className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden group flex items-center justify-between">
+            <div className="space-y-1 relative z-10">
+              <p className="text-[10px] text-gray-300 font-bold uppercase tracking-widest">Active Repository</p>
+              <p className="text-xl font-bold tracking-tight text-gray-900 group-hover:underline">VOYAGE-ARTIFACTS / <span className="text-gray-400 font-medium">main</span></p>
+            </div>
+            <div className="text-right relative z-10">
+              <p className="text-[10px] text-gray-300 font-bold uppercase tracking-widest">Current Items</p>
+              <p className="text-3xl font-black text-black leading-none">{collections.length}</p>
+            </div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-full translate-x-16 -translate-y-16 group-hover:scale-110 transition-transform duration-700"></div>
+          </section>
+
           {/* Collection Inventory */}
           <section className="space-y-6">
-            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em] ml-2">Collection Inventory ({collections.length})</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em] ml-2">Collection Inventory</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {collections.map(item => (
                 <div key={item.id} className="group bg-white border border-gray-100 p-6 rounded-3xl flex flex-col justify-between hover:shadow-xl hover:shadow-black/[0.02] transition-all">
                   <div className="space-y-4">
@@ -500,64 +516,6 @@ export default function Admin() {
                 </div>
               ))}
             </div>
-          </section>
-        </div>
-
-        {/* Right Column: Dynamic Preview (5 Cols) */}
-        <div className="lg:col-span-5 space-y-8 lg:sticky lg:top-32 h-fit">
-          <section className="bg-white border border-gray-100 rounded-[2.5rem] overflow-hidden flex flex-col shadow-2xl shadow-black/5 h-[650px]">
-            <div className="p-8 border-b border-gray-50 flex items-center justify-between">
-              <span className="text-[11px] font-bold tracking-[0.2em] text-gray-300 uppercase">Interactive Engine Preview</span>
-              <div className="flex gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-gray-100"></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-gray-100"></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-gray-100"></div>
-              </div>
-            </div>
-            <div className="flex-1 relative bg-gray-50">
-              {/* 3D Preview Overlay */}
-              <div className="absolute top-6 left-6 w-64 h-64 bg-white/80 backdrop-blur-md rounded-3xl z-10 shadow-xl border border-white/50 overflow-hidden">
-                {newItem.modelPath ? (
-                  <ModelPreview
-                    modelPath={newItem.modelPath}
-                    scale={newItem.scale}
-                    intensity={newItem.intensity}
-                    rotationY={newItem.rotationY}
-                    autoRotateSpeed={newItem.autoRotateSpeed}
-                  />
-                ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center text-[10px] text-gray-200 font-bold uppercase tracking-widest px-8 text-center italic">Awaiting Asset</div>
-                )}
-              </div>
-              {/* Map Preview */}
-              <div className="w-full h-full rounded-b-[2.5rem] overflow-hidden grayscale-[0.5] contrast-[0.8] opacity-80">
-                <Map locations={[newItem]} center={newItem.coordinates} />
-              </div>
-            </div>
-            <div className="p-8 bg-black">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
-                <p className="text-[10px] font-bold tracking-[0.2em] text-gray-500 uppercase">System Status: Active</p>
-              </div>
-              <p className="text-sm font-medium text-white/90 leading-relaxed font-mono italic">
-                {editMode ? `REDACTING RECORD [id:${editId}]` : 'CORE ENGINE READY FOR ARTIFACT CATALOGING...'}
-              </p>
-            </div>
-          </section>
-
-          {/* Cloud Info Hub */}
-          <section className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden group">
-            <div className="relative z-10 flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-[10px] text-gray-300 font-bold uppercase tracking-widest">Active Repository</p>
-                <p className="text-xl font-bold tracking-tight text-gray-900 group-hover:underline">VOYAGE-ARTIFACTS / <span className="text-gray-400 font-medium">main</span></p>
-              </div>
-              <div className="text-right">
-                <p className="text-[10px] text-gray-300 font-bold uppercase tracking-widest">Manifest Size</p>
-                <p className="text-3xl font-black text-black leading-none">{collections.length}</p>
-              </div>
-            </div>
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-full translate-x-16 -translate-y-16 group-hover:scale-110 transition-transform duration-700"></div>
           </section>
         </div>
       </main>
