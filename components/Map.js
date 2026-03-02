@@ -27,11 +27,15 @@ export default function Map({ locations, onSelectLocation }) {
   }, []);
 
   return (
-    <MapContainer 
-      center={[20, 110]}
-      zoom={4} 
+    <MapContainer
+      center={[20, 0]}
+      zoom={2}
       className="h-full w-full"
-      zoomControl={false}
+      zoomControl={true}
+      dragging={false}
+      scrollWheelZoom={false}
+      doubleClickZoom={true}
+      touchZoom={true}
     >
       <TileLayer
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
