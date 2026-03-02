@@ -131,8 +131,9 @@ export default function Admin() {
         const data = await res.json();
         if (res.ok) {
           alert('Model uploaded directly to GitHub! Vercel will rebuild soon.');
-          setNewItem(prev => ({ ...prev, modelPath: `/models/${file.name}` }));
-          setAvailableModels(prev => [...new Set([...prev, `/models/${file.name}`])]);
+          const newModelPath = `/models/${file.name}`;
+          setNewItem(prev => ({ ...prev, modelPath: newModelPath }));
+          setAvailableModels(prev => [...new Set([...prev, newModelPath])]);
         } else {
           throw new Error(data.error || 'Upload failed');
         }
