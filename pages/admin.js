@@ -110,39 +110,52 @@ export default function Admin() {
     if (!confirm(`Confirm upload ${file.name} to GitHub cloud?`)) return;
 
     setIsSyncing(true);
+
+    // Promisify the file reading process
+    const readFileAsBase64 = (file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
+      });
+    };
+
     try {
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        const base64Content = event.target.result.split(',')[1];
-        const res = await fetch('/api/github-sync', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            path: `public/models/${file.name}`,
-            content: base64Content,
-            isBinary: true,
-            message: `Upload new 3D model: ${file.name}`
-          })
+      const base64Content = await readFileAsBase64(file);
+      console.log('Pushing to GitHub...', file.name);
+
+      const res = await fetch('/api/github-sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          path: `public/models/${file.name}`,
+          content: base64Content,
+          isBinary: true,
+          message: `Upload new 3D model: ${file.name}`
+        })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        console.log('Upload Success:', data);
+        alert('Model uploaded directly to GitHub! Vercel will rebuild soon.');
+        const newModelPath = `/models/${file.name}`;
+
+        setAvailableModels(prev => {
+          const updated = [...prev];
+          if (!updated.includes(newModelPath)) updated.push(newModelPath);
+          return updated;
         });
-        const data = await res.json();
-        if (res.ok) {
-          alert('Model uploaded directly to GitHub! Vercel will rebuild soon.');
-          const newModelPath = `/models/${file.name}`;
-          // Immediately update both available models list and the current form selection
-          setAvailableModels(prev => {
-            const updated = [...prev];
-            if (!updated.includes(newModelPath)) {
-              updated.push(newModelPath);
-            }
-            return updated;
-          });
-          setNewItem(prev => ({ ...prev, modelPath: newModelPath }));
-        } else {
-          throw new Error(data.error || 'Upload failed');
-        }
-      };
-      reader.readAsDataURL(file);
+        setNewItem(prev => ({ ...prev, modelPath: newModelPath }));
+      } else {
+        console.error('Upload API Error:', data);
+        const detailedError = data.details ? `\n\nDetails: ${data.details}` : '';
+        throw new Error(`${data.error}${detailedError}`);
+      }
     } catch (err) {
+      console.error('File Upload Logic Error:', err);
       alert('Upload failed: ' + err.message);
     } finally {
       setIsSyncing(false);
