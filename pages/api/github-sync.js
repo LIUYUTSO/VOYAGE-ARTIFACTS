@@ -9,7 +9,10 @@ export default async function handler(req, res) {
     const REPO_NAME = 'VOYAGE-ARTIFACTS';
 
     if (!GITHUB_TOKEN) {
-        return res.status(500).json({ error: 'GitHub Token not configured' });
+        return res.status(500).json({
+            error: 'GitHub Token missing from environment',
+            details: 'If this is on Vercel, please add GITHUB_TOKEN to Project Settings -> Environment Variables. Local .env.local is NOT shared with the cloud.'
+        });
     }
 
     try {
@@ -64,7 +67,16 @@ export default async function handler(req, res) {
         const result = await pushRes.json();
 
         if (!pushRes.ok) {
-            return res.status(pushRes.status).json({ error: result.message || 'GitHub Sync failed' });
+            let errorMsg = result.message || 'GitHub Sync failed';
+            if (pushRes.status === 401) errorMsg = 'Invalid GitHub Token (401). Check permissions.';
+            if (pushRes.status === 403) errorMsg = 'Token permissions restricted (403). Ensure "repo" scope is enabled.';
+            if (pushRes.status === 404) errorMsg = 'Repository or file path not found (404).';
+
+            return res.status(pushRes.status).json({
+                error: errorMsg,
+                github_status: pushRes.status,
+                github_message: result.message
+            });
         }
 
         return res.status(200).json({
