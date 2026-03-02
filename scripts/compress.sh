@@ -20,16 +20,19 @@ echo "--- VOYAGE ASSET OPTIMIZER ---"
 echo "Target: $FILE"
 echo "Original size: $(du -h "$FILE" | cut -f1)"
 
-# Use npx to run gltf-pipeline with more aggressive settings
-# -d: Draco compression
-# -b: Binary output
-# --draco.compressionLevel 10: Max compression level
-# --stats: Show detailed statistics
+# Use npx to run gltf-transform (more powerful than gltf-pipeline for textures)
+# 1. Resize textures to 1024 max (most 12MB files have 4K textures)
+# 2. Convert textures to WebP (huge savings)
+# 3. Apply Draco geometry compression
 BASENAME=$(basename "$FILE")
 OUTPUT="compressed_${BASENAME}"
 
-echo "Optimizing... (Applying Draco + Aggressive compression)"
-npx -y gltf-pipeline -i "$FILE" -o "$OUTPUT" -d --draco.compressionLevel 10 -b
+echo "Optimizing... (Step 1: Resizing Textures to 1024px & Converting to WebP)"
+npx -y @gltf-transform/cli resize --width 1024 --height 1024 "$FILE" "$OUTPUT"
+npx -y @gltf-transform/cli webp "$OUTPUT" "$OUTPUT"
+
+echo "Optimizing... (Step 2: Applying Draco Geometry Compression)"
+npx -y @gltf-transform/cli draco "$OUTPUT" "$OUTPUT"
 
 if [ $? -eq 0 ]; then
     echo "Success! Compressed version created: $OUTPUT"
