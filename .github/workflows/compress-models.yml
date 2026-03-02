@@ -1,0 +1,48 @@
+name: Compress 3D Models
+
+on:
+  push:
+    paths:
+      - 'public/models/**.glb'
+      - 'public/models/**.gltf'
+
+jobs:
+  compress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install gltf-pipeline
+        run: npm install -g gltf-pipeline
+
+      - name: Compress new/modified models
+        run: |
+          git config --global user.name "Voyage Optimizer"
+          git config --global user.email "voyage-bot@users.noreply.github.com"
+          
+          # Find modified/new glb files in public/models
+          FILES=$(git diff --name-only HEAD~1 HEAD | grep 'public/models/.*\.glb$' || true)
+          
+          for file in $FILES; do
+            if [ -f "$file" ]; then
+              echo "Compressing $file..."
+              # Use Draco compression (-d) and save to temporary file
+              gltf-pipeline -i "$file" -o "${file}.tmp" -d
+              mv "${file}.tmp" "$file"
+              git add "$file"
+            fi
+          done
+          
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: auto-optimize 3D models with Draco compression"
+            git push origin main
+          fi

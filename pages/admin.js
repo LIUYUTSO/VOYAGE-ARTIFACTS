@@ -186,7 +186,7 @@ export default function Admin() {
     if (!file) return;
 
     if (file.size > 4 * 1024 * 1024) {
-      alert(`File too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Vercel limits uploads to 4.5MB via API. Please use a smaller model.`);
+      alert(`⚠️ 檔案過大 (${(file.size / 1024 / 1024).toFixed(1)}MB)\n\nVercel 上限為 4.5MB。請先在終端機執行：\nsh scripts/compress.sh ${file.name}\n\n壓縮後再上傳產生的 "compressed_${file.name}"。`);
       return;
     }
 
