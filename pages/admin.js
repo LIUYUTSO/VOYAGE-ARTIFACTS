@@ -186,7 +186,7 @@ export default function Admin() {
     if (!file) return;
 
     if (file.size > 4 * 1024 * 1024) {
-      alert(`⚠️ 檔案過大 (${(file.size / 1024 / 1024).toFixed(1)}MB)\n\nVercel 上限為 4.5MB。請先在終端機執行：\nsh scripts/compress.sh ${file.name}\n\n壓縮後再上傳產生的 "compressed_${file.name}"。`);
+      alert(`⚠️ 檔案過大 (${(file.size / 1024 / 1024).toFixed(1)}MB)\n\nVercel 上限為 4.5MB。請嘗試以下方式：\n\n1. 執行本地壓縮腳本：\nsh scripts/compress.sh ~/Downloads/${file.name}\n\n2. 或使用線上工具壓縮 (推薦)：\nhttps://gltf.report\n(進去後執行 Script -> Simplify 並勾選 Draco 匯出)`);
       return;
     }
 
