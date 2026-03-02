@@ -71,6 +71,84 @@ export default function Admin() {
     }
   };
 
+  // --- Biometric (WebAuthn) Logic ---
+  const [hasBiometrics, setHasBiometrics] = useState(false);
+
+  useEffect(() => {
+    // Check if device already has a registered credential
+    if (typeof window !== 'undefined') {
+      const credId = localStorage.getItem('voyage_cred_id');
+      setHasBiometrics(!!credId);
+    }
+  }, []);
+
+  const registerBiometrics = async () => {
+    try {
+      const challenge = new Uint8Array(32);
+      window.crypto.getRandomValues(challenge);
+
+      const userID = Uint8Array.from("voyage-admin-user", c => c.charCodeAt(0));
+
+      const createCredentialOptions = {
+        publicKey: {
+          challenge: challenge,
+          rp: { name: "Voyage Artifacts", id: window.location.hostname },
+          user: {
+            id: userID,
+            name: "admin@voyage.travel",
+            displayName: "Adam Liu"
+          },
+          pubKeyCredParams: [{ alg: -7, type: "public-key" }, { alg: -257, type: "public-key" }],
+          authenticatorSelection: { userVerification: "preferred" },
+          timeout: 60000,
+          attestation: "direct"
+        }
+      };
+
+      const credential = await navigator.credentials.create(createCredentialOptions);
+      if (credential) {
+        localStorage.setItem('voyage_cred_id', btoa(String.fromCharCode(...new Uint8Array(credential.rawId))));
+        setHasBiometrics(true);
+        alert('FaceID / TouchID registered successfully on this device!');
+      }
+    } catch (err) {
+      console.error('Biometric registration failed:', err);
+      alert('Registration failed: ' + err.message);
+    }
+  };
+
+  const authenticateBiometrics = async () => {
+    try {
+      const credIdBase64 = localStorage.getItem('voyage_cred_id');
+      if (!credIdBase64) return;
+
+      const credentialId = Uint8Array.from(atob(credIdBase64), c => c.charCodeAt(0));
+      const challenge = new Uint8Array(32);
+      window.crypto.getRandomValues(challenge);
+
+      const assertionOptions = {
+        publicKey: {
+          challenge: challenge,
+          allowCredentials: [{
+            id: credentialId,
+            type: 'public-key',
+            transports: ['internal']
+          }],
+          userVerification: "required",
+          timeout: 60000
+        }
+      };
+
+      const assertion = await navigator.credentials.get(assertionOptions);
+      if (assertion) {
+        setAuthorized(true);
+      }
+    } catch (err) {
+      console.error('Biometric auth failed:', err);
+      alert('Authentication failed: ' + err.message);
+    }
+  };
+
   // Location search with debounce
   useEffect(() => {
     const timer = setTimeout(async () => {
@@ -220,33 +298,49 @@ export default function Admin() {
 
   if (!authorized) {
     return (
-      <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6 text-white font-sans">
-        <div className="max-w-md w-full bg-white text-black rounded-3xl p-10 shadow-2xl overflow-hidden relative">
-          <h1 className="text-3xl font-bold tracking-tight mb-2 text-center">Admin Login</h1>
-          <p className="text-gray-400 mb-8 text-center text-sm font-medium">VOYAGE ARTIFACTS MANAGEMENT</p>
+      <div className="min-h-screen bg-black flex items-center justify-center font-sans p-6 overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-zinc-900 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-zinc-800 rounded-full mix-blend-screen filter blur-[100px] opacity-20 animate-pulse delay-700"></div>
 
-          <div className="space-y-4">
-            <div className="relative">
+        <div className="w-full max-w-md bg-[#0a0a0a] border border-white/5 p-12 rounded-[3.5rem] shadow-2xl relative z-10 backdrop-blur-3xl">
+          <div className="text-center mb-12">
+            <h1 className="text-white text-3xl font-black tracking-tighter italic mb-2">VOYAGE SECURE</h1>
+            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.4em]">Authorization Required</p>
+          </div>
+
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Access Protocol</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && checkPassword()}
-                placeholder="Security Key"
-                className="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-6 py-4 text-center font-semibold focus:border-black focus:bg-white transition-all outline-none text-black placeholder:text-gray-300"
+                placeholder="Enter Access Key..."
+                className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold tracking-widest focus:border-white/40 focus:bg-white/10 outline-none transition-all placeholder:text-gray-700"
               />
             </div>
             <button
               onClick={checkPassword}
-              className="w-full bg-black text-white font-bold py-4 rounded-xl hover:bg-gray-800 transition-all active:scale-[0.98] shadow-lg shadow-black/10"
+              className="w-full bg-white text-black font-black py-4 rounded-full text-xs uppercase tracking-widest hover:bg-gray-200 transition-all active:scale-95 shadow-xl shadow-white/5"
             >
-              Authorize Access
+              Verify Identity
             </button>
-          </div>
 
-          <div className="mt-8 text-center">
-            <p className="text-[10px] text-gray-300 uppercase tracking-widest font-bold">Local Hostname Bypass Enabled for Developers</p>
+            {hasBiometrics && (
+              <div className="pt-4 mt-4 border-t border-white/5">
+                <button
+                  onClick={authenticateBiometrics}
+                  className="w-full bg-zinc-900 text-white border border-white/10 font-bold py-4 rounded-full text-[10px] uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center justify-center gap-3"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11V6a3 3 0 0 1 6 0v5" /><rect x="5" y="11" width="14" height="10" rx="2" /></svg>
+                  FaceID Login
+                </button>
+              </div>
+            )}
           </div>
+          <p className="mt-10 text-center text-[8px] text-gray-600 font-black uppercase tracking-[0.3em]">System Version: CURATOR_ENGINE_ALPHA</p>
         </div>
       </div>
     );
@@ -263,6 +357,13 @@ export default function Admin() {
           <p className="text-gray-400 text-[10px] tracking-widest mt-1 uppercase">Curated Travel Collections</p>
         </div>
         <div className="flex items-center gap-4">
+          <button
+            onClick={registerBiometrics}
+            className="text-[9px] font-black text-white px-4 py-2 border border-white/20 rounded-full hover:bg-white/10 transition-all uppercase tracking-widest flex items-center gap-3"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 8v8" /><path d="M8 12h8" /></svg>
+            Setup FaceID
+          </button>
           <button
             disabled={isSyncing}
             onClick={syncCollectionsToCloud}
