@@ -8,17 +8,17 @@ import { preloadModels } from './ModelPreview';
 // 这里添加Model组件的定义，它在文件中可能缺失了
 const Model = ({ modelPath, scale, onLoaded }) => {
   const { scene } = useGLTF(modelPath);
-  
+
   useEffect(() => {
     if (scene && onLoaded) {
       // 删除这两行初始角度设置
       // scene.rotation.x = Math.PI / 8; // 向下倾斜一点
       // scene.rotation.y = Math.PI / 4; // 旋转45度
-      
+
       onLoaded();
     }
   }, [scene, onLoaded]);
-  
+
   return <primitive object={scene} scale={scale} />;
 };
 
@@ -26,11 +26,11 @@ const Model = ({ modelPath, scale, onLoaded }) => {
 const ModelViewer = ({ modelPath, scale = 1 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadProgress, setLoadProgress] = useState(0);
-  
+
   // 添加这两行来创建引用
   const ambientLight = useRef();
   const directionalLight = useRef();
-  
+
   // 处理模型加载完成事件
   const handleModelLoaded = () => {
     setLoadProgress(100); // 设置进度为100%
@@ -47,7 +47,7 @@ const ModelViewer = ({ modelPath, scale = 1 }) => {
         const increment = Math.max(1, 10 - Math.floor(loadProgress / 10));
         setLoadProgress(prev => Math.min(prev + increment, 90));
       }, 200);
-      
+
       return () => clearTimeout(timer);
     }
   }, [isLoading, loadProgress]);
@@ -57,10 +57,10 @@ const ModelViewer = ({ modelPath, scale = 1 }) => {
     if (ambientLight.current && directionalLight.current) {
       // 检查是否是 Cody 的作品，如果是则增加亮度
       const isCodyArtwork = modelPath.includes('cody.glb');
-      
+
       // 调整环境光 - 所有模型都比当前 cody 模型再亮一倍
       ambientLight.current.intensity = isCodyArtwork ? 3.0 : 2.5; // 原来是 1.5 和 0.8
-      
+
       // 调整主光源 - 所有模型都比当前 cody 模型再亮一倍
       directionalLight.current.intensity = isCodyArtwork ? 2.4 : 2.0; // 原来是 1.2 和 0.8
     }
@@ -68,38 +68,36 @@ const ModelViewer = ({ modelPath, scale = 1 }) => {
 
   return (
     <div className="relative w-full h-full">
-      <Canvas 
-        camera={{ position: [0, 0, 5], fov: 45 }}
+      <Canvas
+        camera={{ position: [0, 0, -15], fov: 30 }}
         style={{ background: '#ffffff' }}
       >
-        <ambientLight ref={ambientLight} intensity={5.0} />
-        <directionalLight 
+        <ambientLight ref={ambientLight} intensity={2.5} />
+        <directionalLight
           ref={directionalLight}
-          position={[5, 5, 5]} 
+          position={[10, 10, 5]}
           intensity={2.0}
-          castShadow 
+          castShadow
         />
-        
+
         {/* 为所有模型添加额外的点光源 */}
         <pointLight position={[-5, 5, 5]} intensity={1.4} />
         <pointLight position={[5, -5, 5]} intensity={1.4} />
-        
+
         <Suspense fallback={null}>
           <Model modelPath={modelPath} scale={scale} onLoaded={handleModelLoaded} />
         </Suspense>
-        <OrbitControls 
-          enableZoom={true}
-          autoRotate={true}
-          autoRotateSpeed={3}
-          target={[0, 0, 0]}
+        <OrbitControls
+          autoRotate={true}          // 自动旋转
+          autoRotateSpeed={3}        // 旋转速度
         />
       </Canvas>
-      
+
       {/* 黑白进度条加载指示器 */}
       {isLoading && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-white bg-opacity-90 z-10">
           <div className="w-64 bg-gray-200 rounded-full h-2.5 mb-3">
-            <div 
+            <div
               className="bg-gray-800 h-2.5 rounded-full transition-all duration-300 ease-out"
               style={{ width: `${loadProgress}%` }}
             ></div>
@@ -114,11 +112,11 @@ const ModelViewer = ({ modelPath, scale = 1 }) => {
 // 加载高精度模型的组件
 const ModelLoader = ({ modelPath, scale, onLoaded, visible }) => {
   const { scene } = useGLTF(modelPath);
-  
+
   useEffect(() => {
     onLoaded();
   }, [scene, onLoaded]);
-  
+
   if (!visible) return null;
   return <primitive object={scene} scale={scale} />;
 };
@@ -128,12 +126,12 @@ const InfoSection = ({ selectedLocation }) => (
   <div className="p-6">
     <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedLocation.name}</h2>
     <p className="text-gray-600 mb-4">{selectedLocation.description}</p>
-    
+
     <div className="mb-4">
       <p className="text-sm text-gray-500 mb-1"><span className="font-semibold">Location:</span> {selectedLocation.location}</p>
       <p className="text-sm text-gray-500 mb-1"><span className="font-semibold">Date:</span> {selectedLocation.date}</p>
     </div>
-    
+
     <div className="mt-6">
       <h3 className="text-lg font-semibold text-gray-800 mb-2">Travel Notes</h3>
       <p className="text-gray-700 italic">{selectedLocation.travelNote}</p>
@@ -144,7 +142,7 @@ const InfoSection = ({ selectedLocation }) => (
 // 彈窗主組件
 const ModelPopup = ({ selectedLocation, isClosing, onClose }) => {
   const [animationState, setAnimationState] = useState('initial');
-  
+
   // 在弹窗打开前预加载模型
   useEffect(() => {
     if (selectedLocation && selectedLocation.modelPath) {
@@ -152,7 +150,7 @@ const ModelPopup = ({ selectedLocation, isClosing, onClose }) => {
       preloadModels([selectedLocation.modelPath]);
     }
   }, [selectedLocation]);
-  
+
   // 處理動畫狀態
   useEffect(() => {
     if (isClosing) {
@@ -259,14 +257,14 @@ const ModelPopup = ({ selectedLocation, isClosing, onClose }) => {
   };
 
   return (
-    <div 
+    <div
       onClick={handleBackdropClick}
       style={getBackdropStyle()}
       aria-modal="true"
       role="dialog"
       className="backdrop"
     >
-      <div 
+      <div
         style={getContentStyle()}
         onClick={(e) => e.stopPropagation()} // 防止點擊內容區域時觸發關閉
         className="content"
@@ -284,30 +282,39 @@ const ModelPopup = ({ selectedLocation, isClosing, onClose }) => {
 
         {/* 彈窗內容 */}
         <div className="flex flex-col lg:flex-row h-full">
-          {/* 3D 模型區 */}
-          <div className="w-full lg:w-1/2 h-[300px] lg:h-[500px] bg-gray-50">
-            <Canvas 
-              camera={{ position: [0, 0, 5], fov: 45 }}
-              style={{ background: '#ffffff' }}
-            >
-              <ambientLight intensity={5.0} />
-              <directionalLight 
-                position={[5, 5, 5]} 
-                intensity={2.0}
-              />
-              <Model 
-                modelPath={selectedLocation.modelPath} 
-                scale={1}
-              />
-              <OrbitControls 
-                enableZoom={true}
-                autoRotate={true}
-                autoRotateSpeed={3}
-                target={[0, 0, 0]}
-              />
-            </Canvas>
+          {/* 3D 模型或圖片區 */}
+          <div className="w-full lg:w-1/2 h-[300px] lg:h-[500px] bg-gray-50 flex items-center justify-center">
+            {selectedLocation.modelPath ? (
+              <Canvas
+                camera={{ position: [0, 0, 5], fov: 45 }}
+                style={{ background: '#ffffff', width: '100%', height: '100%' }}
+              >
+                <ambientLight intensity={2.5} />
+                <directionalLight
+                  position={[5, 5, 5]}
+                  intensity={2.0}
+                />
+                <Model
+                  modelPath={selectedLocation.modelPath}
+                  scale={selectedLocation.name === "Table Salt" ? 1.5 : selectedLocation.scale || 1}
+                />
+                <OrbitControls
+                  enableZoom={true}
+                  autoRotate={true}
+                  autoRotateSpeed={3}
+                />
+              </Canvas>
+            ) : selectedLocation.imagePath ? (
+              <div className="w-full h-full p-8 flex items-center justify-center bg-white">
+                <img
+                  src={selectedLocation.imagePath}
+                  alt={selectedLocation.name}
+                  className="max-w-full max-h-full object-contain drop-shadow-xl"
+                />
+              </div>
+            ) : null}
           </div>
-          
+
           {/* 信息區 */}
           <div className="w-full lg:w-1/2 overflow-y-auto max-h-[300px] lg:max-h-[500px]">
             <InfoSection selectedLocation={selectedLocation} />

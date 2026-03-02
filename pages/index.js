@@ -6,7 +6,7 @@ import Head from 'next/head';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 // 動態導入組件
-const Map = dynamic(() => import('../components/Map'), { 
+const Map = dynamic(() => import('../components/Map'), {
   ssr: false,
   loading: () => <div className="w-full h-[400px] bg-gray-100 rounded-lg animate-pulse" />
 });
@@ -38,7 +38,7 @@ export default function Home() {
     setLocationInfo(defaultLocationInfo);
     setIsLoading(false);
   }, []);
-  
+
   // 在數據加載時顯示加載狀態
   if (isLoading) {
     return <div className="text-center py-10">Loading collections...</div>;
@@ -93,7 +93,7 @@ export default function Home() {
                   This collection showcases objects from my travels, each holding a story, a place, and a moment worth sharing.
                 </span>
               </p>
-              
+
               {/* 爱心符号分隔线 */}
               <div className="flex items-center justify-center mt-4 sm:mt-8">
                 <div className="h-px w-12 sm:w-16 bg-gray-200"></div>
@@ -106,12 +106,12 @@ export default function Home() {
               </div>
             </div>
           </div>
-          
+
           {/* 地圖部分 - 修改高度响应式设计 */}
           <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 mt-16 mb-8">
             <div className="h-[300px] sm:h-[400px] md:h-[500px] rounded-lg overflow-hidden relative bg-white z-0 shadow-md">
-              <Map 
-                locations={locationInfo} 
+              <Map
+                locations={locationInfo}
                 onSelectLocation={handleSelectLocation}
               />
             </div>
@@ -124,7 +124,7 @@ export default function Home() {
                 <h2 className="text-2xl font-bold tracking-tight text-gray-900">VOYAGE ARTIFACTS</h2>
                 <p className="text-sm text-gray-400 mt-2">Curated Travel Collections</p>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
                 <div className="text-center md:text-left">
                   <h3 className="text-lg font-semibold mb-4 flex items-center justify-center md:justify-start text-gray-800">
@@ -140,7 +140,7 @@ export default function Home() {
                     This is an experimental site created to document my travel collection while honing my web development and 3D modeling skills. It serves as both a personal archive and a creative exploration of interactive digital storytelling.
                   </p>
                 </div>
-                
+
                 <div className="text-center md:text-left">
                   <h3 className="text-lg font-semibold mb-4 flex items-center justify-center md:justify-start text-gray-800">
                     <span className="w-8 h-8 mr-2 flex items-center justify-center rounded-full bg-gray-100">
@@ -151,10 +151,10 @@ export default function Home() {
                     Follow Me
                   </h3>
                   <div className="flex justify-center md:justify-start">
-                    <a 
-                      href="https://www.instagram.com/adam.liou/" 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
+                    <a
+                      href="https://www.instagram.com/adam.liou/"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-all"
                       aria-label="Instagram"
                     >
@@ -163,7 +163,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="text-center mt-12 pt-8 border-t border-gray-100">
                 <p className="text-sm text-gray-400">
                   &copy; {new Date().getFullYear()} VOYAGE ARTIFACTS | All Rights Reserved
