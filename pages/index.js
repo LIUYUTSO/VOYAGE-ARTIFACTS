@@ -194,10 +194,20 @@ export default function Home() {
                   </div>
 
                   <div className="px-1 sm:px-2">
-                    <h4 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tightest leading-[1.1] text-black mb-4 group-hover:underline decoration-4 underline-offset-[10px] transition-all">{item.name}</h4>
-                    <div className="flex flex-wrap items-center gap-3">
-                      <p className="text-[9px] font-black text-white bg-black px-3 py-1.5 rounded-lg uppercase tracking-widest leading-none shadow-lg shadow-black/5">{item.location}</p>
-                      <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none pl-3 border-l border-gray-200">Cataloged {item.date}</p>
+                    {/* Fixed height title container for vertical alignment */}
+                    <div className="h-20 sm:h-24 md:h-28 flex flex-col justify-end mb-4">
+                      <h4 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tightest leading-[1.1] text-black line-clamp-3 transition-colors group-hover:text-gray-600">
+                        {item.name}
+                      </h4>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-gray-50">
+                      <p className="text-[9px] font-black text-white bg-black px-3 py-1.5 rounded-lg uppercase tracking-widest leading-none shadow-lg shadow-black/5 whitespace-nowrap">
+                        {item.location}
+                      </p>
+                      <p className="text-[8px] sm:text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none pl-3 border-l border-gray-200 whitespace-nowrap">
+                        {item.date}
+                      </p>
                     </div>
                   </div>
                 </div>
