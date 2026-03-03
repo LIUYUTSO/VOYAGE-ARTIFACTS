@@ -253,7 +253,15 @@ export default function Admin() {
       });
 
       console.log('Step 3: Waiting for GitHub API response...');
-      const data = await res.json();
+
+      let data;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        data = await res.json();
+      } else {
+        const textError = await res.text();
+        throw new Error(`Server returned non-JSON response (${res.status}): ${textError.substring(0, 100)}...`);
+      }
 
       if (res.ok) {
         console.log('Upload Success:', data);
