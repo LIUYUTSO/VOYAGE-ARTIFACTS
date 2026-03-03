@@ -33,7 +33,7 @@ export default function Map({ locations, onSelectLocation }) {
       className="h-full w-full outline-none"
       zoomControl={false}
       dragging={true}
-      scrollWheelZoom={true}
+      scrollWheelZoom={false}
       doubleClickZoom={true}
       touchZoom={true}
     >

@@ -157,26 +157,26 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {locationInfo.map((item, index) => (
               <div
                 key={index}
                 onClick={() => handleSelectLocation(item)}
-                className="group bg-white rounded-[3rem] border border-gray-100 p-8 shadow-sm hover:shadow-2xl hover:shadow-black/[0.06] transition-all duration-700 cursor-pointer flex flex-col justify-between"
+                className="group bg-white rounded-[2.5rem] border border-gray-100 p-6 shadow-sm hover:shadow-2xl hover:shadow-black/[0.04] transition-all duration-700 cursor-pointer flex flex-col justify-between"
               >
-                <div className="space-y-8">
-                  <div className="aspect-square bg-gray-50/50 rounded-[2.5rem] overflow-hidden relative group/canvas">
+                <div className="space-y-6">
+                  <div className="h-64 sm:h-72 bg-gray-50/50 rounded-[2rem] overflow-hidden relative group/canvas">
                     {/* Artifact Index */}
-                    <div className="absolute top-6 left-6 bg-white shadow-xl px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest z-10 border border-gray-50 text-black group-hover:bg-black group-hover:text-white transition-colors duration-500">
+                    <div className="absolute top-5 left-5 bg-white shadow-xl px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest z-10 border border-gray-50 text-black group-hover:bg-black group-hover:text-white transition-colors duration-500">
                       Record 0{index + 1}
                     </div>
 
                     {/* Live 3D Preview inside Card */}
-                    <div className="w-full h-full relative z-0 opacity-80 group-hover:opacity-100 transition-opacity duration-700">
+                    <div className="w-full h-full relative z-0 opacity-90 group-hover:opacity-100 transition-opacity duration-700">
                       {item.modelPath ? (
                         <ModelPreview
                           modelPath={item.modelPath}
-                          scale={item.scale || 1}
+                          scale={(item.scale || 1) * 0.9}
                           intensity={item.intensity || 1.5}
                           rotationY={item.rotationY || 0}
                           autoRotateSpeed={item.autoRotateSpeed || 2}
