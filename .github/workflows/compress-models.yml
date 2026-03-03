@@ -4,45 +4,52 @@ on:
   push:
     paths:
       - 'public/models/**.glb'
-      - 'public/models/**.gltf'
 
 jobs:
   compress:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2 # Need at least 2 commits to do a diff
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install gltf-pipeline
-        run: npm install -g gltf-pipeline
+      - name: Install gltf-transform
+        run: npm install -g @gltf-transform/cli @gltf-transform/extensions
 
-      - name: Compress new/modified models
+      - name: Optimize models
         run: |
           git config --global user.name "Voyage Optimizer"
           git config --global user.email "voyage-bot@users.noreply.github.com"
           
-          # Find modified/new glb files in public/models
-          FILES=$(git diff --name-only HEAD~1 HEAD | grep 'public/models/.*\.glb$' || true)
+          # Find new or modified .glb files in the last push
+          # Use HEAD^ to compare with previous commit, or just fallback to listing all in public/models
+          FILES=$(git diff --name-only HEAD^ HEAD | grep 'public/models/.*\.glb$' || true)
           
+          if [ -z "$FILES" ]; then
+            echo "No .glb files to optimize."
+            exit 0
+          fi
+
           for file in $FILES; do
             if [ -f "$file" ]; then
-              echo "Compressing $file..."
-              # Use Draco compression (-d) and save to temporary file
-              gltf-pipeline -i "$file" -o "${file}.tmp" -d
-              mv "${file}.tmp" "$file"
-              git add "$file"
+              echo "Optimizing $file..."
+              # Apply Draco compression, texture resizing (max 1024), and cleanup
+              # This matches the power of the local compress.sh script
+              gltf-transform optimize "$file" "$file" --simplify false --join false --texture-compress webp --resample true
             fi
           done
           
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
+          if git diff --quiet; then
+            echo "No optimizations needed (files already optimized)."
           else
-            git commit -m "chore: auto-optimize 3D models with Draco compression"
+            git add public/models/*.glb
+            git commit -m "chore: automated cloud-optimization for 3D models (Draco + WebP)"
             git push origin main
           fi
