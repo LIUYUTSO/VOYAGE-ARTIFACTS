@@ -96,16 +96,16 @@ export default function Home() {
             Now Live: Interactive Collection v2.1
           </div>
 
-          <h2 className="text-6xl md:text-8xl lg:text-[10rem] font-black tracking-tightest leading-[0.8] text-black mb-12 max-w-6xl italic uppercase relative">
+          <h2 className="text-4xl sm:text-6xl md:text-8xl lg:text-[10rem] font-black tracking-tightest leading-[1] sm:leading-[0.8] text-black mb-12 max-w-6xl italic uppercase relative">
             <span
               className="block relative z-20"
-              style={{ transform: `translateX(${scrollY * -0.15}px)` }}
+              style={{ transform: typeof window !== 'undefined' && window.innerWidth > 768 ? `translateX(${scrollY * -0.15}px)` : 'none' }}
             >
               Explore the stories
             </span>
             <span
               className="block text-gray-400 mt-4 opacity-70"
-              style={{ transform: `translateX(${scrollY * 0.25}px)` }}
+              style={{ transform: typeof window !== 'undefined' && window.innerWidth > 768 ? `translateX(${scrollY * 0.25}px)` : 'none' }}
             >
               left behind by time.
             </span>
@@ -157,17 +157,17 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
             {locationInfo.map((item, index) => (
               <div
                 key={index}
                 onClick={() => handleSelectLocation(item)}
-                className="group bg-white rounded-[2.5rem] border border-gray-100 p-6 shadow-sm hover:shadow-2xl hover:shadow-black/[0.04] transition-all duration-700 cursor-pointer flex flex-col justify-between"
+                className="group bg-white rounded-[2rem] sm:rounded-[2.5rem] border border-gray-100 p-5 sm:p-6 shadow-sm hover:shadow-2xl hover:shadow-black/[0.04] transition-all duration-700 cursor-pointer flex flex-col justify-between"
               >
-                <div className="space-y-6">
-                  <div className="h-64 sm:h-72 bg-gray-50/50 rounded-[2rem] overflow-hidden relative group/canvas">
+                <div className="space-y-4 sm:space-y-6">
+                  <div className="h-56 sm:h-72 bg-gray-50/50 rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden relative group/canvas">
                     {/* Artifact Index */}
-                    <div className="absolute top-5 left-5 bg-white shadow-xl px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest z-10 border border-gray-50 text-black group-hover:bg-black group-hover:text-white transition-colors duration-500">
+                    <div className="absolute top-4 left-4 sm:top-5 left-5 bg-white shadow-xl px-3 py-1.5 rounded-xl text-[8px] sm:text-[9px] font-black uppercase tracking-widest z-10 border border-gray-50 text-black group-hover:bg-black group-hover:text-white transition-colors duration-500">
                       Record 0{index + 1}
                     </div>
 
@@ -186,18 +186,18 @@ export default function Home() {
                       )}
                     </div>
 
-                    <div className="absolute inset-x-0 bottom-0 p-8 opacity-0 group-hover:opacity-100 transition-all translate-y-6 group-hover:translate-y-0 duration-700 z-10 pointer-events-none">
-                      <div className="w-full bg-black text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-2xl shadow-black/20">
+                    <div className="absolute inset-x-0 bottom-0 p-6 opacity-0 group-hover:opacity-100 transition-all translate-y-6 group-hover:translate-y-0 duration-700 z-10 pointer-events-none">
+                      <div className="w-full bg-black text-white py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-2xl shadow-black/20">
                         Examine in detail <FaArrowRight size={10} />
                       </div>
                     </div>
                   </div>
 
-                  <div className="px-2">
-                    <h4 className="text-3xl font-black uppercase tracking-tightest leading-none text-black mb-4 group-hover:underline decoration-4 underline-offset-8 transition-all">{item.name}</h4>
-                    <div className="flex items-center gap-3">
-                      <p className="text-[10px] font-black text-white bg-black px-4 py-2 rounded-xl uppercase tracking-widest leading-none shadow-lg shadow-black/5">{item.location}</p>
-                      <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest leading-none pl-3 border-l border-gray-200">Cataloged {item.date}</p>
+                  <div className="px-1 sm:px-2">
+                    <h4 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tightest leading-[1.1] text-black mb-4 group-hover:underline decoration-4 underline-offset-[10px] transition-all">{item.name}</h4>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <p className="text-[9px] font-black text-white bg-black px-3 py-1.5 rounded-lg uppercase tracking-widest leading-none shadow-lg shadow-black/5">{item.location}</p>
+                      <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none pl-3 border-l border-gray-200">Cataloged {item.date}</p>
                     </div>
                   </div>
                 </div>
