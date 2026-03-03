@@ -273,7 +273,14 @@ export default function Admin() {
       }
     } catch (err) {
       console.error('File Upload Logic Error:', err);
-      alert('Upload failed: ' + err.message);
+      // Log the stack trace to help pinpoint the exact line
+      console.error('Stack Trace:', err.stack);
+
+      let msg = err.message;
+      if (msg.includes('The string did not match the expected pattern')) {
+        msg += '\n\n(這通常是 atob/btoa 處理異常。請打開開發者工具 Console 查看詳細堆棧日誌)';
+      }
+      alert('Upload failed: ' + msg);
     } finally {
       setIsSyncing(false);
     }
