@@ -122,19 +122,24 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Global Map Display */}
-        <section className="max-w-[1500px] mx-auto px-8 mb-40">
-          <div className="h-[500px] md:h-[700px] bg-white rounded-[4rem] overflow-hidden shadow-2xl shadow-black/[0.05] border border-white/50 relative p-4 group">
-            <div className="absolute top-10 left-10 z-10 bg-black/90 backdrop-blur-md text-white px-6 py-4 rounded-3xl shadow-2xl border border-white/10 max-w-[200px] group-hover:-translate-y-2 transition-transform duration-500">
-              <p className="text-[10px] font-black uppercase tracking-widest mb-1 text-gray-500">Tactical Map</p>
-              <p className="text-xs font-bold leading-tight">Interact with artifacts across the globe.</p>
+        {/* Global Map Display - Full Bleed Design */}
+        <section className="w-full mb-40 overflow-hidden relative">
+          <div className="h-[600px] md:h-[850px] bg-black relative group">
+            <div className="absolute top-12 left-12 z-20 bg-black/95 backdrop-blur-2xl text-white px-7 py-5 rounded-3xl shadow-2xl border border-white/10 max-w-[220px] group-hover:-translate-y-2 transition-transform duration-700 pointer-events-none">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] mb-2 text-gray-400">Tactical Archive</p>
+              <p className="text-sm font-bold leading-tight italic">Drag and zoom to explore curiosities across the globe.</p>
             </div>
-            <div className="w-full h-full rounded-[3rem] overflow-hidden grayscale-[0.3] contrast-[0.9] hover:grayscale-0 transition-all duration-1000">
+
+            <div className="w-full h-full grayscale-[0.3] contrast-[1.05] hover:grayscale-0 transition-all duration-1000">
               <Map
                 locations={locationInfo}
                 onSelectLocation={handleSelectLocation}
               />
             </div>
+
+            {/* Artistic Overlays */}
+            <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-black/20 to-transparent pointer-events-none z-10"></div>
+            <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-[#fafafe] to-transparent pointer-events-none z-10"></div>
           </div>
         </section>
 

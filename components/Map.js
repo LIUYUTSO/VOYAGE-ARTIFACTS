@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, ZoomControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useEffect } from 'react';
@@ -30,10 +30,10 @@ export default function Map({ locations, onSelectLocation }) {
     <MapContainer
       center={[20, 0]}
       zoom={2}
-      className="h-full w-full"
-      zoomControl={true}
-      dragging={false}
-      scrollWheelZoom={false}
+      className="h-full w-full outline-none"
+      zoomControl={false}
+      dragging={true}
+      scrollWheelZoom={true}
       doubleClickZoom={true}
       touchZoom={true}
     >
@@ -42,6 +42,7 @@ export default function Map({ locations, onSelectLocation }) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         maxZoom={19}
       />
+      <ZoomControl position="bottomright" />
       {locations.map((location) => (
         <Marker
           key={location.id}
@@ -53,4 +54,4 @@ export default function Map({ locations, onSelectLocation }) {
       ))}
     </MapContainer>
   );
-} 
+}
