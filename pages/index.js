@@ -215,67 +215,66 @@ export default function Home() {
             ))}
           </div>
         </section>
-      </section>
 
-      {/* Global Footer */}
-      <footer className="bg-black text-white pt-32 pb-16 rounded-t-[6rem] relative z-10">
-        <div className="max-w-[1400px] mx-auto px-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-24 mb-24">
-            <div className="space-y-10">
-              <div>
-                <h2 className="text-5xl font-black tracking-tightest uppercase italic leading-none">VOYAGE <br /><span className="text-gray-700">ARTIFACTS</span></h2>
-                <p className="text-gray-600 text-xs font-bold tracking-[0.4em] mt-4 uppercase">Experimental Journey Digital Record</p>
+        {/* Global Footer */}
+        <footer className="bg-black text-white pt-32 pb-16 rounded-t-[6rem] relative z-10">
+          <div className="max-w-[1400px] mx-auto px-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-24 mb-24">
+              <div className="space-y-10">
+                <div>
+                  <h2 className="text-5xl font-black tracking-tightest uppercase italic leading-none">VOYAGE <br /><span className="text-gray-700">ARTIFACTS</span></h2>
+                  <p className="text-gray-600 text-xs font-bold tracking-[0.4em] mt-4 uppercase">Experimental Journey Digital Record</p>
+                </div>
+                <p className="text-gray-400 leading-relaxed font-semibold text-xl max-w-lg italic opacity-80">
+                  This archive documents curated artifacts from global expeditions, blending interactive 3D visualization with deep personal storytelling.
+                </p>
               </div>
-              <p className="text-gray-400 leading-relaxed font-semibold text-xl max-w-lg italic opacity-80">
-                This archive documents curated artifacts from global expeditions, blending interactive 3D visualization with deep personal storytelling.
-              </p>
-            </div>
 
-            <div className="flex flex-col md:items-end justify-between">
-              <div className="space-y-8 md:text-right">
-                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-gray-700 underline decoration-2 underline-offset-8 mb-6">Transmission Channel</p>
-                <div className="flex md:justify-end">
-                  <a
-                    href="https://www.instagram.com/adam.liou/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-20 h-20 rounded-[2.5rem] bg-zinc-900 border border-zinc-800 flex items-center justify-center text-white hover:bg-white hover:text-black hover:scale-110 transition-all duration-700 shadow-2xl group"
-                    aria-label="Instagram"
-                  >
-                    <FaInstagram size={28} className="group-hover:rotate-12 transition-transform duration-500" />
-                  </a>
+              <div className="flex flex-col md:items-end justify-between">
+                <div className="space-y-8 md:text-right">
+                  <p className="text-[10px] font-black uppercase tracking-[0.5em] text-gray-700 underline decoration-2 underline-offset-8 mb-6">Transmission Channel</p>
+                  <div className="flex md:justify-end">
+                    <a
+                      href="https://www.instagram.com/adam.liou/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-20 h-20 rounded-[2.5rem] bg-zinc-900 border border-zinc-800 flex items-center justify-center text-white hover:bg-white hover:text-black hover:scale-110 transition-all duration-700 shadow-2xl group"
+                      aria-label="Instagram"
+                    >
+                      <FaInstagram size={28} className="group-hover:rotate-12 transition-transform duration-500" />
+                    </a>
+                  </div>
+                </div>
+                <div className="mt-20 md:mt-0 text-[10px] font-black text-gray-500 uppercase tracking-[0.3em] border border-zinc-900 px-8 py-4 rounded-full bg-zinc-900/50">
+                  Design System: Premium Industrial v2.2
                 </div>
               </div>
-              <div className="mt-20 md:mt-0 text-[10px] font-black text-gray-500 uppercase tracking-[0.3em] border border-zinc-900 px-8 py-4 rounded-full bg-zinc-900/50">
-                Design System: Premium Industrial v2.2
+            </div>
+
+            <div className="border-t border-zinc-900 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
+              <p className="text-xs font-bold text-gray-700 uppercase tracking-[0.3em]">
+                &copy; {new Date().getFullYear()} VOYAGE ARTIFACTS / ALL SYSTEMS NOMINAL
+              </p>
+              <div className="flex gap-10 text-[10px] font-black text-gray-800 uppercase tracking-[0.4em]">
+                <span className="hover:text-white transition-colors cursor-default">Archive Entry</span>
+                <span className="hover:text-white transition-colors cursor-default">Adam Liou</span>
+                <span className="hover:text-white transition-colors cursor-default">Revision 03</span>
               </div>
             </div>
           </div>
+        </footer>
 
-          <div className="border-t border-zinc-900 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-xs font-bold text-gray-700 uppercase tracking-[0.3em]">
-              &copy; {new Date().getFullYear()} VOYAGE ARTIFACTS / ALL SYSTEMS NOMINAL
-            </p>
-            <div className="flex gap-10 text-[10px] font-black text-gray-800 uppercase tracking-[0.4em]">
-              <span className="hover:text-white transition-colors cursor-default">Archive Entry</span>
-              <span className="hover:text-white transition-colors cursor-default">Adam Liou</span>
-              <span className="hover:text-white transition-colors cursor-default">Revision 03</span>
-            </div>
-          </div>
-        </div>
-      </footer>
+        {/* Dynamic Popup Engine */}
+        {selectedLocation && (
+          <ModelPopup
+            selectedLocation={selectedLocation}
+            isClosing={isClosing}
+            onClose={handleClose}
+          />
+        )}
 
-      {/* Dynamic Popup Engine */}
-      {selectedLocation && (
-        <ModelPopup
-          selectedLocation={selectedLocation}
-          isClosing={isClosing}
-          onClose={handleClose}
-        />
-      )}
-
-      <SpeedInsights />
-    </main >
+        <SpeedInsights />
+      </main >
 
       <style jsx global>{`
         @font-face {
