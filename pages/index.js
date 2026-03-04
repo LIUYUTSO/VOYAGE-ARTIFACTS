@@ -72,20 +72,20 @@ export default function Home() {
       <main className="relative bg-[#fafafe] min-h-screen font-sans selection:bg-black selection:text-white overflow-x-hidden">
 
         {/* Unified Navigation */}
-        <header className="fixed top-0 left-0 right-0 h-20 bg-black z-[100] flex items-center justify-between px-8 sm:px-12 shadow-2xl shadow-black/20">
+        <header className="fixed top-0 left-0 right-0 h-16 bg-black z-[100] flex items-center justify-between px-6 sm:px-10 shadow-2xl shadow-black/20">
           <div className="flex flex-col">
-            <h1 className="text-white font-black tracking-tighter text-xl leading-none italic">VOYAGE ARTIFACTS</h1>
-            <p className="text-gray-500 text-[9px] tracking-[0.3em] mt-1 uppercase font-bold">Curated By Adam Liu</p>
+            <h1 className="text-white font-black tracking-tighter text-lg leading-none italic">VOYAGE ARTIFACTS</h1>
+            <p className="text-gray-500 text-[8px] tracking-[0.3em] mt-1 uppercase font-bold">Curated By Adam Liu</p>
           </div>
           <a
             href="/admin"
-            className="text-[10px] font-black bg-white text-black px-5 py-2.5 rounded-full hover:bg-gray-100 transition-all uppercase tracking-widest shadow-xl shadow-black/10"
+            className="text-[9px] font-black bg-white text-black px-4 py-2 rounded-full hover:bg-gray-100 transition-all uppercase tracking-widest shadow-xl shadow-black/10"
           >
-            Management Suite
+            Management
           </a>
         </header>
 
-        <div className="h-20"></div>
+        <div className="h-16"></div>
 
         {/* Premium Hero Section with Parallax */}
         <section className="max-w-[1400px] mx-auto px-8 py-20 lg:py-40 flex flex-col items-center text-center relative pointer-events-none">
@@ -216,49 +216,48 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Global Footer */}
-        <footer className="bg-black text-white pt-32 pb-16 rounded-t-[6rem] relative z-10">
-          <div className="max-w-[1400px] mx-auto px-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-24 mb-24">
-              <div className="space-y-10">
+        {/* Global Footer - Compacted */}
+        <footer className="bg-black text-white pt-16 pb-10 rounded-t-[3rem] relative z-10">
+          <div className="max-w-[1400px] mx-auto px-8 sm:px-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-20 mb-12 sm:mb-16">
+              <div className="space-y-6">
                 <div>
-                  <h2 className="text-5xl font-black tracking-tightest uppercase italic leading-none">VOYAGE <br /><span className="text-gray-700">ARTIFACTS</span></h2>
-                  <p className="text-gray-600 text-xs font-bold tracking-[0.4em] mt-4 uppercase">Experimental Journey Digital Record</p>
+                  <h2 className="text-3xl sm:text-4xl font-black tracking-tightest uppercase italic leading-none">VOYAGE <br /><span className="text-gray-700">ARTIFACTS</span></h2>
+                  <p className="text-gray-600 text-[9px] font-bold tracking-[0.4em] mt-3 uppercase">Digital Journey Record</p>
                 </div>
-                <p className="text-gray-400 leading-relaxed font-semibold text-xl max-w-lg italic opacity-80">
-                  This archive documents curated artifacts from global expeditions, blending interactive 3D visualization with deep personal storytelling.
+                <p className="text-gray-500 leading-relaxed font-semibold text-base sm:text-lg max-w-md italic opacity-80">
+                  Documenting curated artifacts from global expeditions, blending interactive 3D visualization with personal storytelling.
                 </p>
               </div>
 
               <div className="flex flex-col md:items-end justify-between">
-                <div className="space-y-8 md:text-right">
-                  <p className="text-[10px] font-black uppercase tracking-[0.5em] text-gray-700 underline decoration-2 underline-offset-8 mb-6">Transmission Channel</p>
+                <div className="space-y-6 md:text-right">
+                  <p className="text-[9px] font-black uppercase tracking-[0.5em] text-gray-700 underline decoration-2 underline-offset-4 mb-4">Transmission</p>
                   <div className="flex md:justify-end">
                     <a
                       href="https://www.instagram.com/adam.liou/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-20 h-20 rounded-[2.5rem] bg-zinc-900 border border-zinc-800 flex items-center justify-center text-white hover:bg-white hover:text-black hover:scale-110 transition-all duration-700 shadow-2xl group"
+                      className="w-14 h-14 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-white hover:bg-white hover:text-black hover:scale-110 transition-all duration-700 shadow-2xl group"
                       aria-label="Instagram"
                     >
-                      <FaInstagram size={28} className="group-hover:rotate-12 transition-transform duration-500" />
+                      <FaInstagram size={20} className="group-hover:rotate-12 transition-transform duration-500" />
                     </a>
                   </div>
                 </div>
-                <div className="mt-20 md:mt-0 text-[10px] font-black text-gray-500 uppercase tracking-[0.3em] border border-zinc-900 px-8 py-4 rounded-full bg-zinc-900/50">
-                  Design System: Premium Industrial v2.2
+                <div className="mt-12 md:mt-0 text-[8px] font-black text-gray-600 uppercase tracking-[0.3em] border border-zinc-900 px-6 py-3 rounded-full bg-zinc-900/50">
+                  System Revision v2.3
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-zinc-900 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
-              <p className="text-xs font-bold text-gray-700 uppercase tracking-[0.3em]">
-                &copy; {new Date().getFullYear()} VOYAGE ARTIFACTS / ALL SYSTEMS NOMINAL
+            <div className="border-t border-zinc-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+              <p className="text-[9px] font-bold text-gray-700 uppercase tracking-[0.3em]">
+                &copy; {new Date().getFullYear()} VOYAGE ARTIFACTS
               </p>
-              <div className="flex gap-10 text-[10px] font-black text-gray-800 uppercase tracking-[0.4em]">
-                <span className="hover:text-white transition-colors cursor-default">Archive Entry</span>
-                <span className="hover:text-white transition-colors cursor-default">Adam Liou</span>
-                <span className="hover:text-white transition-colors cursor-default">Revision 03</span>
+              <div className="flex gap-8 text-[8px] font-black text-gray-800 uppercase tracking-[0.4em]">
+                <span className="hover:text-white transition-colors cursor-default select-none">Entry Log</span>
+                <span className="hover:text-white transition-colors cursor-default select-none">Adam Liou</span>
               </div>
             </div>
           </div>
