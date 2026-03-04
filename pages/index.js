@@ -143,32 +143,32 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Gallery Grid - Integrated 3D Previews */}
-        <section className="max-w-[1400px] mx-auto px-8 pb-40">
-          <div className="flex items-end justify-between mb-20 px-4">
-            <div className="space-y-2">
-              <h3 className="text-5xl font-black uppercase tracking-tighter leading-none italic">Collection Highlights</h3>
-              <p className="text-xs text-gray-500 font-bold tracking-[0.2em] uppercase">High Resolution Artifact Manifest</p>
+        {/* Gallery Section - Horizontal Exhibition for Mobile */}
+        <section className="max-w-[1400px] mx-auto px-6 sm:px-8 pb-32 sm:pb-40">
+          <div className="flex items-end justify-between mb-10 sm:mb-20 px-2 sm:px-4">
+            <div className="space-y-1 sm:space-y-2">
+              <h3 className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none italic">Manifest</h3>
+              <p className="text-[8px] sm:text-xs text-gray-400 font-bold tracking-[0.3em] uppercase">Archive Records</p>
             </div>
-            <div className="h-0.5 flex-1 mx-12 bg-gray-100 mb-2 hidden md:block"></div>
+            <div className="h-px flex-1 mx-6 sm:mx-12 bg-gray-100 mb-2 hidden md:block"></div>
             <div className="text-right">
-              <p className="text-4xl font-black italic text-gray-300">{locationInfo.length}</p>
-              <p className="text-[10px] font-black uppercase text-gray-400">Total Records</p>
+              <p className="text-2xl sm:text-4xl font-black italic text-gray-200">{locationInfo.length}</p>
+              <p className="text-[7px] sm:text-[10px] font-black uppercase text-gray-300 tracking-widest">Total</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
+          <div className="flex overflow-x-auto pb-8 sm:pb-0 scrollbar-hide snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8 -mx-6 px-6 sm:mx-0 sm:px-0">
             {locationInfo.map((item, index) => (
               <div
                 key={index}
                 onClick={() => handleSelectLocation(item)}
-                className="group bg-white rounded-[2rem] sm:rounded-[2.5rem] border border-gray-100 p-5 sm:p-6 shadow-sm hover:shadow-2xl hover:shadow-black/[0.04] transition-all duration-700 cursor-pointer flex flex-col justify-between"
+                className="group flex-shrink-0 w-[240px] sm:w-auto bg-white rounded-[1.5rem] sm:rounded-[2.5rem] border border-gray-100 p-4 sm:p-6 shadow-sm hover:shadow-2xl hover:shadow-black/[0.04] transition-all duration-700 cursor-pointer flex flex-col justify-between snap-center"
               >
                 <div className="space-y-4 sm:space-y-6">
-                  <div className="h-56 sm:h-72 bg-gray-50/50 rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden relative group/canvas">
+                  <div className="h-48 sm:h-72 bg-gray-50/50 rounded-[1.2rem] sm:rounded-[2rem] overflow-hidden relative group/canvas">
                     {/* Artifact Index */}
-                    <div className="absolute top-4 left-4 sm:top-5 left-5 bg-white shadow-xl px-3 py-1.5 rounded-xl text-[8px] sm:text-[9px] font-black uppercase tracking-widest z-10 border border-gray-50 text-black group-hover:bg-black group-hover:text-white transition-colors duration-500">
-                      Record 0{index + 1}
+                    <div className="absolute top-3 left-3 sm:top-5 left-5 bg-white shadow-xl px-2 py-1 rounded-lg text-[7px] sm:text-[9px] font-black uppercase tracking-widest z-10 border border-gray-50 text-black group-hover:bg-black group-hover:text-white transition-colors duration-500">
+                      R-0{index + 1}
                     </div>
 
                     {/* Live 3D Preview inside Card */}
@@ -176,36 +176,36 @@ export default function Home() {
                       {item.modelPath ? (
                         <ModelPreview
                           modelPath={item.modelPath}
-                          scale={(item.scale || 1) * 0.9}
+                          scale={(item.scale || 1) * 0.85}
                           intensity={item.intensity || 1.5}
                           rotationY={item.rotationY || 0}
                           autoRotateSpeed={item.autoRotateSpeed || 2}
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-200 font-bold uppercase tracking-widest italic">Awaiting asset...</div>
+                        <div className="w-full h-full flex items-center justify-center text-[8px] text-gray-200 font-bold uppercase tracking-widest italic">Syncing...</div>
                       )}
                     </div>
 
-                    <div className="absolute inset-x-0 bottom-0 p-6 opacity-0 group-hover:opacity-100 transition-all translate-y-6 group-hover:translate-y-0 duration-700 z-10 pointer-events-none">
-                      <div className="w-full bg-black text-white py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-2xl shadow-black/20">
-                        Examine in detail <FaArrowRight size={10} />
+                    <div className="absolute inset-x-0 bottom-0 p-4 opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0 duration-700 z-10 pointer-events-none">
+                      <div className="w-full bg-black text-white py-3 rounded-xl font-black text-[8px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-2xl shadow-black/20">
+                        View <FaArrowRight size={8} />
                       </div>
                     </div>
                   </div>
 
                   <div className="px-1 sm:px-2">
                     {/* Fixed height title container for vertical alignment */}
-                    <div className="h-20 sm:h-24 md:h-28 flex flex-col justify-end mb-4">
-                      <h4 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tightest leading-[1.1] text-black line-clamp-3 transition-colors group-hover:text-gray-600">
+                    <div className="h-16 sm:h-24 md:h-28 flex flex-col justify-end mb-3 sm:mb-4">
+                      <h4 className="text-base sm:text-2xl md:text-3xl font-black uppercase tracking-tightest leading-[1.1] text-black line-clamp-2 sm:line-clamp-3 transition-colors group-hover:text-gray-600">
                         {item.name}
                       </h4>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-gray-50">
-                      <p className="text-[9px] font-black text-white bg-black px-3 py-1.5 rounded-lg uppercase tracking-widest leading-none shadow-lg shadow-black/5 whitespace-nowrap">
+                    <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-gray-50">
+                      <p className="text-[7px] sm:text-[9px] font-black text-white bg-black px-2 py-1 rounded-md sm:rounded-lg uppercase tracking-widest leading-none shadow-lg shadow-black/5 whitespace-nowrap">
                         {item.location}
                       </p>
-                      <p className="text-[8px] sm:text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none pl-3 border-l border-gray-200 whitespace-nowrap">
+                      <p className="text-[7px] sm:text-[9px] font-black text-gray-300 uppercase tracking-widest leading-none pl-2 border-l border-gray-100 whitespace-nowrap">
                         {item.date}
                       </p>
                     </div>
@@ -215,66 +215,67 @@ export default function Home() {
             ))}
           </div>
         </section>
+      </section>
 
-        {/* Global Footer */}
-        <footer className="bg-black text-white pt-32 pb-16 rounded-t-[6rem] relative z-10">
-          <div className="max-w-[1400px] mx-auto px-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-24 mb-24">
-              <div className="space-y-10">
-                <div>
-                  <h2 className="text-5xl font-black tracking-tightest uppercase italic leading-none">VOYAGE <br /><span className="text-gray-700">ARTIFACTS</span></h2>
-                  <p className="text-gray-600 text-xs font-bold tracking-[0.4em] mt-4 uppercase">Experimental Journey Digital Record</p>
-                </div>
-                <p className="text-gray-400 leading-relaxed font-semibold text-xl max-w-lg italic opacity-80">
-                  This archive documents curated artifacts from global expeditions, blending interactive 3D visualization with deep personal storytelling.
-                </p>
+      {/* Global Footer */}
+      <footer className="bg-black text-white pt-32 pb-16 rounded-t-[6rem] relative z-10">
+        <div className="max-w-[1400px] mx-auto px-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-24 mb-24">
+            <div className="space-y-10">
+              <div>
+                <h2 className="text-5xl font-black tracking-tightest uppercase italic leading-none">VOYAGE <br /><span className="text-gray-700">ARTIFACTS</span></h2>
+                <p className="text-gray-600 text-xs font-bold tracking-[0.4em] mt-4 uppercase">Experimental Journey Digital Record</p>
               </div>
-
-              <div className="flex flex-col md:items-end justify-between">
-                <div className="space-y-8 md:text-right">
-                  <p className="text-[10px] font-black uppercase tracking-[0.5em] text-gray-700 underline decoration-2 underline-offset-8 mb-6">Transmission Channel</p>
-                  <div className="flex md:justify-end">
-                    <a
-                      href="https://www.instagram.com/adam.liou/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-20 h-20 rounded-[2.5rem] bg-zinc-900 border border-zinc-800 flex items-center justify-center text-white hover:bg-white hover:text-black hover:scale-110 transition-all duration-700 shadow-2xl group"
-                      aria-label="Instagram"
-                    >
-                      <FaInstagram size={28} className="group-hover:rotate-12 transition-transform duration-500" />
-                    </a>
-                  </div>
-                </div>
-                <div className="mt-20 md:mt-0 text-[10px] font-black text-gray-500 uppercase tracking-[0.3em] border border-zinc-900 px-8 py-4 rounded-full bg-zinc-900/50">
-                  Design System: Premium Industrial v2.2
-                </div>
-              </div>
+              <p className="text-gray-400 leading-relaxed font-semibold text-xl max-w-lg italic opacity-80">
+                This archive documents curated artifacts from global expeditions, blending interactive 3D visualization with deep personal storytelling.
+              </p>
             </div>
 
-            <div className="border-t border-zinc-900 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
-              <p className="text-xs font-bold text-gray-700 uppercase tracking-[0.3em]">
-                &copy; {new Date().getFullYear()} VOYAGE ARTIFACTS / ALL SYSTEMS NOMINAL
-              </p>
-              <div className="flex gap-10 text-[10px] font-black text-gray-800 uppercase tracking-[0.4em]">
-                <span className="hover:text-white transition-colors cursor-default">Archive Entry</span>
-                <span className="hover:text-white transition-colors cursor-default">Adam Liou</span>
-                <span className="hover:text-white transition-colors cursor-default">Revision 03</span>
+            <div className="flex flex-col md:items-end justify-between">
+              <div className="space-y-8 md:text-right">
+                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-gray-700 underline decoration-2 underline-offset-8 mb-6">Transmission Channel</p>
+                <div className="flex md:justify-end">
+                  <a
+                    href="https://www.instagram.com/adam.liou/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-20 h-20 rounded-[2.5rem] bg-zinc-900 border border-zinc-800 flex items-center justify-center text-white hover:bg-white hover:text-black hover:scale-110 transition-all duration-700 shadow-2xl group"
+                    aria-label="Instagram"
+                  >
+                    <FaInstagram size={28} className="group-hover:rotate-12 transition-transform duration-500" />
+                  </a>
+                </div>
+              </div>
+              <div className="mt-20 md:mt-0 text-[10px] font-black text-gray-500 uppercase tracking-[0.3em] border border-zinc-900 px-8 py-4 rounded-full bg-zinc-900/50">
+                Design System: Premium Industrial v2.2
               </div>
             </div>
           </div>
-        </footer>
 
-        {/* Dynamic Popup Engine */}
-        {selectedLocation && (
-          <ModelPopup
-            selectedLocation={selectedLocation}
-            isClosing={isClosing}
-            onClose={handleClose}
-          />
-        )}
+          <div className="border-t border-zinc-900 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p className="text-xs font-bold text-gray-700 uppercase tracking-[0.3em]">
+              &copy; {new Date().getFullYear()} VOYAGE ARTIFACTS / ALL SYSTEMS NOMINAL
+            </p>
+            <div className="flex gap-10 text-[10px] font-black text-gray-800 uppercase tracking-[0.4em]">
+              <span className="hover:text-white transition-colors cursor-default">Archive Entry</span>
+              <span className="hover:text-white transition-colors cursor-default">Adam Liou</span>
+              <span className="hover:text-white transition-colors cursor-default">Revision 03</span>
+            </div>
+          </div>
+        </div>
+      </footer>
 
-        <SpeedInsights />
-      </main>
+      {/* Dynamic Popup Engine */}
+      {selectedLocation && (
+        <ModelPopup
+          selectedLocation={selectedLocation}
+          isClosing={isClosing}
+          onClose={handleClose}
+        />
+      )}
+
+      <SpeedInsights />
+    </main >
 
       <style jsx global>{`
         @font-face {
