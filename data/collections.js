@@ -1,138 +1,84 @@
-// 移除或注释掉文件开头的旧collections定义
-// export const collections = [
-//   {
-//     id: 1,
-//     name: "Sakura Charm",
-//     description: "A delicate cherry blossom-inspired artifact from Japan",
-//     location: "Tokyo, Japan",
-//     date: "2023/12/25",
-//     modelPath: "/models/Chou.glb",
-//     scale: 1.2,
-//     coordinates: [35.6762, 139.6503],
-//     travelNote: "Found this exquisite piece in a century-old craft shop in Asakusa..."
-//   },
-//   // 更多收藏品...
-// ];
-
-// 以下是完整的 locationInfo 数组，供主页和管理页面使用
 export const locationInfo = [
   {
-    id: 1,
-    name: "Table Salt",
-    location: "Tokyo, Japan",
-    date: "2024-10",
-    modelPath: "/models/Saltbottle.glb",
-    scale: 1,
-    intensity: 1.5,
-    rotationY: 0,
-    autoRotateSpeed: 2,
-    coordinates: [35.6762, 139.6503], // 东京的坐标
-    travelNote: "An essential condiment found in every Japanese household, this elegant salt bottle embodies the Japanese philosophy of bringing beauty to everyday items. Its minimalist design reflects the perfect balance between functionality and aesthetics, making even the simplest dining table complete."
+    "id": 1,
+    "name": "Table Salt",
+    "location": "Tokyo, Japan",
+    "date": "2024-10",
+    "modelPath": "/models/Saltbottle.glb",
+    "scale": 1,
+    "intensity": 1.5,
+    "rotationY": 0,
+    "autoRotateSpeed": 2,
+    "coordinates": [
+      35.6762,
+      139.6503
+    ],
+    "travelNote": "An essential condiment found in every Japanese household, this elegant salt bottle embodies the Japanese philosophy of bringing beauty to everyday items. Its minimalist design reflects the perfect balance between functionality and aesthetics, making even the simplest dining table complete."
   },
   {
-    id: 2,
-    name: "Desktop Soy Sauce Bottle",
-    location: "Kyushu, Japan",
-    date: "2023-10",
-    modelPath: "/models/kyushu.glb",
-    scale: 3,
-    intensity: 1.5,
-    rotationY: 0,
-    autoRotateSpeed: 2,
-    coordinates: [33.5904, 130.4017],
-    travelNote: "A charming small soy sauce bottle acquired during a scenic road trip across Kyushu, Japan. This decorative piece captures the essence of traditional Japanese culinary culture in a miniature form."
+    "id": 2,
+    "name": "Desktop Soy Sauce Bottle",
+    "location": "Kyushu, Japan",
+    "date": "2023-10",
+    "modelPath": "/models/kyushu.glb",
+    "scale": 3,
+    "intensity": 1.5,
+    "rotationY": 0,
+    "autoRotateSpeed": 2,
+    "coordinates": [
+      33.5904,
+      130.4017
+    ],
+    "travelNote": "A charming small soy sauce bottle acquired during a scenic road trip across Kyushu, Japan. This decorative piece captures the essence of traditional Japanese culinary culture in a miniature form."
   },
   {
-    id: 3,
-    name: "Cody's Artwork",
-    location: "Taiwan",
-    date: "2023-11-30",
-    modelPath: "/models/cody.glb",
-    scale: 2,
-    intensity: 1.5,
-    rotationY: 0,
-    autoRotateSpeed: 2,
-    coordinates: [23.6978, 120.9605],
-    travelNote: "An impressive artistic creation by Cody, showcasing unique visual aesthetics and creative expression. This remarkable artwork represents a fusion of traditional and contemporary elements."
+    "id": 3,
+    "name": "Cody's Artwork",
+    "location": "Taiwan",
+    "date": "2023-11-30",
+    "modelPath": "/models/cody.glb",
+    "scale": 2,
+    "intensity": 1.5,
+    "rotationY": 0,
+    "autoRotateSpeed": 2,
+    "coordinates": [
+      23.6978,
+      120.9605
+    ],
+    "travelNote": "An impressive artistic creation by Cody, showcasing unique visual aesthetics and creative expression. This remarkable artwork represents a fusion of traditional and contemporary elements."
   },
   {
-    id: 4,
-    name: "Tim Hortons Takeout Cup",
-    location: "Calgary, Canada",
-    date: "2026-02",
-    modelPath: "/models/tim_hortons_cup.glb", // Will be used when generate_model.sh finishes
-    imagePath: "/images/tim_hortons_cup.svg", // Fallback if model doesn't exist yet or errors
-    scale: 1,
-    intensity: 1.5,
-    rotationY: 0,
-    autoRotateSpeed: 2,
-    coordinates: [51.0447, -114.0719],
-    travelNote: "A quintessential Canadian symbol. This Tim Hortons cup was a faithful companion during a snowy morning exploration of downtown Calgary. The warmth of the coffee and the familiar red cup are deeply tied to the Canadian experience."
+    "id": 4,
+    "name": "Tim Hortons Takeout Cup",
+    "location": "Calgary, Canada",
+    "date": "2026-02",
+    "modelPath": "/models/tim_hortons_cup.glb",
+    "imagePath": "/images/tim_hortons_cup.svg",
+    "scale": 1,
+    "intensity": 1.5,
+    "rotationY": 0,
+    "autoRotateSpeed": 2,
+    "coordinates": [
+      51.0447,
+      -114.0719
+    ],
+    "travelNote": "A quintessential Canadian symbol. This Tim Hortons cup was a faithful companion during a snowy morning exploration of downtown Calgary. The warmth of the coffee and the familiar red cup are deeply tied to the Canadian experience."
+  },
+  {
+    "name": "Johnathan",
+    "description": "パンチママ",
+    "location": "IKEA",
+    "date": "2025-06",
+    "modelPath": "/models/IKEA_Djungelskog.glb",
+    "scale": 1,
+    "intensity": 1.5,
+    "rotationY": 0,
+    "autoRotateSpeed": 2,
+    "coordinates": [
+      50.9809281,
+      -114.0432243
+    ],
+    "travelNote": "パンチママ",
+    "id": 1772666214346
   }
 ];
-
-// 以下是管理界面使用的 collections
-export const collections = locationInfo.map((item, index) => ({
-  id: item.id, // 使用 item.id 而不是 index + 1
-  name: item.name,
-  description: item.description || '',
-  location: item.location,
-  date: item.date || '',
-  modelPath: item.modelPath,
-  imagePath: item.imagePath,
-  scale: item.scale || 1,
-  rotationY: item.rotationY || 0,
-  autoRotateSpeed: item.autoRotateSpeed || 2,
-  intensity: item.intensity || 1.5,
-  coordinates: item.coordinates || [35.6762, 139.6503],
-  travelNote: item.travelNote || ''
-}));
-
-// 从localStorage加载收藏品
-export function loadCollections() {
-  if (typeof window === 'undefined') return collections;
-
-  const saved = localStorage.getItem('collections');
-  return saved ? JSON.parse(saved) : collections;
-}
-
-// 保存收藏品到localStorage
-export function saveCollections(updatedCollections) {
-  if (typeof window === 'undefined') return;
-
-  localStorage.setItem('collections', JSON.stringify(updatedCollections));
-  return updatedCollections;
-}
-
-// 更新添加收藏品函数
-export function addCollection(newCollection) {
-  const updatedCollections = [
-    ...collections,
-    {
-      id: collections.length + 1,
-      ...newCollection
-    }
-  ];
-
-  // 更新内存中的数组
-  collections.length = 0;
-  collections.push(...updatedCollections);
-
-  // 保存到localStorage
-  saveCollections(updatedCollections);
-
-  return collections;
-}
-
-// 辅助函数 - 从localStorage加载数据
-export function loadCollectionsFromStorage() {
-  if (typeof window === 'undefined') return null;
-
-  try {
-    const saved = localStorage.getItem('collections');
-    return saved ? JSON.parse(saved) : null;
-  } catch (error) {
-    console.error('Error loading from storage:', error);
-    return null;
-  }
-} 
