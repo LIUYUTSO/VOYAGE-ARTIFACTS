@@ -96,16 +96,16 @@ export default function Home() {
             Now Live: Interactive Collection v2.1
           </div>
 
-          <h2 className="text-xl sm:text-6xl md:text-8xl lg:text-[10rem] font-black tracking-tightest leading-[1] sm:leading-[0.8] text-black mb-6 sm:mb-12 max-w-6xl italic uppercase relative">
+          <h2 className="text-6xl sm:text-6xl md:text-8xl lg:text-[10rem] font-black tracking-tightest leading-[1] sm:leading-[0.8] text-black mb-6 sm:mb-12 max-w-6xl italic uppercase relative">
             <span
               className="block relative z-20"
-              style={{ transform: typeof window !== 'undefined' && window.innerWidth > 768 ? `translateX(${scrollY * -0.15}px)` : 'none' }}
+              style={{ transform: `translateX(${scrollY * -0.15}px)` }}
             >
               Explore the stories
             </span>
             <span
               className="block text-gray-400 mt-2 sm:mt-4 opacity-70"
-              style={{ transform: typeof window !== 'undefined' && window.innerWidth > 768 ? `translateX(${scrollY * 0.25}px)` : 'none' }}
+              style={{ transform: `translateX(${scrollY * 0.25}px)` }}
             >
               left behind by time.
             </span>
