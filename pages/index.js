@@ -91,7 +91,10 @@ export default function Home() {
         <section className="max-w-[1400px] mx-auto px-8 pt-6 sm:pt-20 pb-12 sm:pb-40 flex flex-col items-center text-center relative pointer-events-none">
           <div
             className="bg-black text-white px-3 sm:px-4 py-1.5 rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-[0.3em] mb-3 sm:mb-12 animate-fade-in shadow-xl shadow-black/5 pointer-events-auto whitespace-nowrap"
-            style={{ transform: `translateY(${scrollY * 0.1}px)` }}
+            style={{
+              transform: `translate3d(0, ${scrollY * 0.1}px, 0)`,
+              willChange: 'transform'
+            }}
           >
             Now Live: Interactive Collection v2.1
           </div>
@@ -99,23 +102,32 @@ export default function Home() {
           <h2 className="text-5xl sm:text-6xl md:text-8xl lg:text-[10rem] font-black tracking-tightest leading-[1] sm:leading-[0.8] text-black mb-6 sm:mb-12 max-w-6xl italic uppercase relative">
             <span
               className="block relative z-20"
-              style={{ transform: `translateX(${scrollY * -0.15}px)` }}
+              style={{
+                transform: `translate3d(${scrollY * -0.15}px, 0, 0)`,
+                willChange: 'transform'
+              }}
             >
               Explore the stories
             </span>
             <span
               className="block text-gray-400 mt-2 sm:mt-4 opacity-70"
-              style={{ transform: `translateX(${scrollY * 0.25}px)` }}
+              style={{
+                transform: `translate3d(${scrollY * 0.25}px, 0, 0)`,
+                willChange: 'transform'
+              }}
             >
               left behind by time.
             </span>
           </h2>
 
           <div
-            className="max-w-3xl bg-white border border-gray-100 p-6 sm:p-12 rounded-[2.5rem] sm:rounded-[3.5rem] shadow-2xl shadow-black/[0.03] mt-6 sm:mt-12 relative overflow-hidden group pointer-events-auto"
-            style={{ transform: `translateY(${scrollY * -0.05}px)` }}
+            className="max-w-3xl bg-white border border-gray-100 p-5 sm:p-12 rounded-[2rem] sm:rounded-[3.5rem] shadow-2xl shadow-black/[0.03] mt-6 sm:mt-12 relative overflow-hidden group pointer-events-auto"
+            style={{
+              transform: `translate3d(0, ${scrollY * -0.05}px, 0)`,
+              willChange: 'transform'
+            }}
           >
-            <p className="text-gray-600 text-sm md:text-xl leading-relaxed font-semibold italic relative z-10 transition-colors group-hover:text-black duration-500">
+            <p className="text-gray-600 text-sm md:text-xl leading-snug md:leading-relaxed font-semibold italic relative z-10 transition-colors group-hover:text-black duration-500">
               "Every journey leaves behind meaningful treasures. This digital vault showcases objects from my travels, each holding a fragment of the destination, the culture, and the moment."
             </p>
             <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-gray-50 rounded-full group-hover:scale-110 transition-transform duration-1000"></div>
