@@ -217,45 +217,45 @@ export default function Home() {
         </section>
 
         {/* Global Footer - Compacted */}
-        <footer className="bg-black text-white pt-16 pb-10 rounded-t-[3rem] relative z-10">
+        <footer className="bg-black text-white pt-12 sm:pt-16 pb-8 sm:pb-10 rounded-t-[2rem] sm:rounded-t-[3rem] relative z-10">
           <div className="max-w-[1400px] mx-auto px-8 sm:px-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-20 mb-12 sm:mb-16">
-              <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-20 mb-8 sm:mb-16">
+              <div className="space-y-4 sm:space-y-6">
                 <div>
-                  <h2 className="text-3xl sm:text-4xl font-black tracking-tightest uppercase italic leading-none">VOYAGE <br /><span className="text-gray-700">ARTIFACTS</span></h2>
-                  <p className="text-gray-600 text-[9px] font-bold tracking-[0.4em] mt-3 uppercase">Digital Journey Record</p>
+                  <h2 className="text-2xl sm:text-4xl font-black tracking-tightest uppercase italic leading-none">VOYAGE <br /><span className="text-gray-700">ARTIFACTS</span></h2>
+                  <p className="text-gray-600 text-[8px] sm:text-[9px] font-bold tracking-[0.4em] mt-2 sm:mt-3 uppercase">Digital Journey Record</p>
                 </div>
-                <p className="text-gray-500 leading-relaxed font-semibold text-base sm:text-lg max-w-md italic opacity-80">
+                <p className="text-gray-500 leading-relaxed font-semibold text-xs sm:text-lg max-w-md italic opacity-80">
                   Documenting curated artifacts from global expeditions, blending interactive 3D visualization with personal storytelling.
                 </p>
               </div>
 
               <div className="flex flex-col md:items-end justify-between">
-                <div className="space-y-6 md:text-right">
-                  <p className="text-[9px] font-black uppercase tracking-[0.5em] text-gray-700 underline decoration-2 underline-offset-4 mb-4">Transmission</p>
+                <div className="space-y-4 sm:space-y-6 md:text-right">
+                  <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.5em] text-gray-700 underline decoration-2 underline-offset-4 mb-2 sm:mb-4">Transmission</p>
                   <div className="flex md:justify-end">
                     <a
                       href="https://www.instagram.com/adam.liou/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-14 h-14 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-white hover:bg-white hover:text-black hover:scale-110 transition-all duration-700 shadow-2xl group"
+                      className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-white hover:bg-white hover:text-black hover:scale-110 transition-all duration-700 shadow-2xl group"
                       aria-label="Instagram"
                     >
-                      <FaInstagram size={20} className="group-hover:rotate-12 transition-transform duration-500" />
+                      <FaInstagram size={16} className="sm:w-5 sm:h-5 group-hover:rotate-12 transition-transform duration-500" />
                     </a>
                   </div>
                 </div>
-                <div className="mt-12 md:mt-0 text-[8px] font-black text-gray-600 uppercase tracking-[0.3em] border border-zinc-900 px-6 py-3 rounded-full bg-zinc-900/50">
+                <div className="mt-8 md:mt-0 text-[7px] sm:text-[8px] font-black text-gray-600 uppercase tracking-[0.3em] border border-zinc-900 px-4 py-2 sm:px-6 sm:py-3 rounded-full bg-zinc-900/50 w-fit">
                   System Revision v2.3
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-zinc-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-[9px] font-bold text-gray-700 uppercase tracking-[0.3em]">
+            <div className="border-t border-zinc-900 pt-6 sm:pt-8 flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4">
+              <p className="text-[8px] sm:text-[9px] font-bold text-gray-700 uppercase tracking-[0.3em]">
                 &copy; {new Date().getFullYear()} VOYAGE ARTIFACTS
               </p>
-              <div className="flex gap-8 text-[8px] font-black text-gray-800 uppercase tracking-[0.4em]">
+              <div className="flex gap-6 sm:gap-8 text-[7px] sm:text-[8px] font-black text-gray-800 uppercase tracking-[0.4em]">
                 <span className="hover:text-white transition-colors cursor-default select-none">Entry Log</span>
                 <span className="hover:text-white transition-colors cursor-default select-none">Adam Liou</span>
               </div>
