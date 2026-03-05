@@ -88,15 +88,15 @@ export default function Home() {
         <div className="h-16"></div>
 
         {/* Premium Hero Section with Parallax */}
-        <section className="max-w-[1400px] mx-auto px-8 py-20 lg:py-40 flex flex-col items-center text-center relative pointer-events-none">
+        <section className="max-w-[1400px] mx-auto px-8 pt-6 sm:pt-20 pb-12 sm:pb-40 flex flex-col items-center text-center relative pointer-events-none">
           <div
-            className="bg-black text-white px-3 sm:px-4 py-1.5 rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-[0.3em] mb-6 sm:mb-12 animate-fade-in shadow-xl shadow-black/5 pointer-events-auto whitespace-nowrap"
+            className="bg-black text-white px-3 sm:px-4 py-1.5 rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-[0.3em] mb-3 sm:mb-12 animate-fade-in shadow-xl shadow-black/5 pointer-events-auto whitespace-nowrap"
             style={{ transform: `translateY(${scrollY * 0.1}px)` }}
           >
             Now Live: Interactive Collection v2.1
           </div>
 
-          <h2 className="text-6xl sm:text-6xl md:text-8xl lg:text-[10rem] font-black tracking-tightest leading-[1] sm:leading-[0.8] text-black mb-6 sm:mb-12 max-w-6xl italic uppercase relative">
+          <h2 className="text-5xl sm:text-6xl md:text-8xl lg:text-[10rem] font-black tracking-tightest leading-[1] sm:leading-[0.8] text-black mb-6 sm:mb-12 max-w-6xl italic uppercase relative">
             <span
               className="block relative z-20"
               style={{ transform: `translateX(${scrollY * -0.15}px)` }}
