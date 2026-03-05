@@ -188,7 +188,7 @@ export default function Home() {
                       {item.modelPath ? (
                         <ModelPreview
                           modelPath={item.modelPath}
-                          scale={(item.scale || 1) * 0.7}
+                          scale={(item.scale || 1) * 0.5}
                           intensity={item.intensity || 1.5}
                           rotationY={item.rotationY || 0}
                           autoRotateSpeed={item.autoRotateSpeed || 2}
