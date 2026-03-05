@@ -192,7 +192,8 @@ export default function Home() {
                           intensity={item.intensity || 1.5}
                           rotationY={item.rotationY || 0}
                           autoRotateSpeed={item.autoRotateSpeed || 2}
-                          fov={85}
+                          fov={50}
+                          adjustCamera={false}
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-[8px] text-gray-200 font-bold uppercase tracking-widest italic">Syncing...</div>

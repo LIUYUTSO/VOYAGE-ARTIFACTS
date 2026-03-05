@@ -81,7 +81,8 @@ const ModelPreview = memo(({
   intensity = 1.5,
   rotationY = 0,
   autoRotateSpeed = 2,
-  fov = 45
+  fov = 45,
+  adjustCamera = true
 }) => {
   if (!modelPath) return null;
 
@@ -93,7 +94,7 @@ const ModelPreview = memo(({
         <pointLight position={[-10, -10, -10]} intensity={intensity} />
 
         <Suspense fallback={null}>
-          <Stage environment="city" intensity={0.6} contactShadow={{ opacity: 0.2, blur: 2 }}>
+          <Stage environment="city" intensity={0.6} contactShadow={{ opacity: 0.2, blur: 2 }} adjustCamera={adjustCamera}>
             <PresentationControls
               global
               config={{ mass: 2, tension: 500 }}
