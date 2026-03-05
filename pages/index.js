@@ -188,10 +188,11 @@ export default function Home() {
                       {item.modelPath ? (
                         <ModelPreview
                           modelPath={item.modelPath}
-                          scale={(item.scale || 1) * 0.5}
+                          scale={(item.scale || 1) * 0.8}
                           intensity={item.intensity || 1.5}
                           rotationY={item.rotationY || 0}
                           autoRotateSpeed={item.autoRotateSpeed || 2}
+                          fov={60}
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-[8px] text-gray-200 font-bold uppercase tracking-widest italic">Syncing...</div>

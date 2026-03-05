@@ -80,13 +80,14 @@ const ModelPreview = memo(({
   scale = 1,
   intensity = 1.5,
   rotationY = 0,
-  autoRotateSpeed = 2
+  autoRotateSpeed = 2,
+  fov = 45
 }) => {
   if (!modelPath) return null;
 
   return (
     <ModelErrorBoundary key={modelPath}>
-      <Canvas shadows camera={{ position: [0, 0, 4], fov: 45 }} gl={{ preserveDrawingBuffer: true }}>
+      <Canvas shadows camera={{ position: [0, 0, 4], fov: fov }} gl={{ preserveDrawingBuffer: true }}>
         <ambientLight intensity={0.5} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} castShadow />
         <pointLight position={[-10, -10, -10]} intensity={intensity} />
