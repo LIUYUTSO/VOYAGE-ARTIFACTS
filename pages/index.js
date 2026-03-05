@@ -137,9 +137,9 @@ export default function Home() {
         {/* Global Map Display - Full Bleed Design */}
         <section className="w-full mb-40 overflow-hidden relative">
           <div className="h-[600px] md:h-[850px] bg-black relative group">
-            <div className="absolute top-12 left-12 z-20 bg-black/95 backdrop-blur-2xl text-white px-7 py-5 rounded-3xl shadow-2xl border border-white/10 max-w-[220px] group-hover:-translate-y-2 transition-transform duration-700 pointer-events-none">
-              <p className="text-[10px] font-black uppercase tracking-[0.4em] mb-2 text-gray-400">Tactical Archive</p>
-              <p className="text-sm font-bold leading-tight italic">Drag and zoom to explore curiosities across the globe.</p>
+            <div className="absolute top-6 sm:top-12 left-6 sm:left-12 z-20 bg-black/95 backdrop-blur-2xl text-white px-5 sm:px-7 py-3 sm:py-5 rounded-2xl sm:rounded-3xl shadow-2xl border border-white/10 max-w-fit sm:max-w-[220px] group-hover:-translate-y-2 transition-transform duration-700 pointer-events-none">
+              <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.4em] mb-1 sm:mb-2 text-gray-400 whitespace-nowrap">Tactical Archive</p>
+              <p className="text-[10px] sm:text-sm font-bold leading-tight italic whitespace-nowrap">Drag and zoom to explore curiosities.</p>
             </div>
 
             <div className="w-full h-full grayscale-[0.3] contrast-[1.05] hover:grayscale-0 transition-all duration-1000">
@@ -156,7 +156,7 @@ export default function Home() {
         </section>
 
         {/* Gallery Section - Horizontal Exhibition for Mobile */}
-        <section className="max-w-[1400px] mx-auto px-6 sm:px-8 pb-32 sm:pb-40">
+        <section className="max-w-[1400px] mx-auto px-6 sm:px-8 pb-12 sm:pb-40">
           <div className="flex items-end justify-between mb-10 sm:mb-20 px-2 sm:px-4">
             <div className="space-y-1 sm:space-y-2">
               <h3 className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none italic">Manifest</h3>
@@ -188,7 +188,7 @@ export default function Home() {
                       {item.modelPath ? (
                         <ModelPreview
                           modelPath={item.modelPath}
-                          scale={(item.scale || 1) * 0.85}
+                          scale={(item.scale || 1) * 0.7}
                           intensity={item.intensity || 1.5}
                           rotationY={item.rotationY || 0}
                           autoRotateSpeed={item.autoRotateSpeed || 2}
