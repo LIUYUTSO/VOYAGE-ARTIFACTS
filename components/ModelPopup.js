@@ -42,10 +42,11 @@ export default function ModelPopup({ selectedLocation, isClosing, onClose }) {
           <div className="w-full h-full relative cursor-grab active:cursor-grabbing">
             <ModelPreview
               modelPath={selectedLocation.modelPath}
-              scale={selectedLocation.scale || 1}
+              scale={1}
               intensity={selectedLocation.intensity || 1.5}
               rotationY={selectedLocation.rotationY || 0}
               autoRotateSpeed={selectedLocation.autoRotateSpeed || 2}
+              adjustCamera={1.8}
             />
           </div>
 

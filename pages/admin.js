@@ -212,8 +212,8 @@ export default function Admin() {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (file.size > 4 * 1024 * 1024) {
-      alert(`⚠️ 檔案過大 (${(file.size / 1024 / 1024).toFixed(1)}MB)\n\nVercel 上限為 4.5MB。請嘗試以下方式：\n\n1. 執行本地壓縮腳本：\nsh scripts/compress.sh ~/Downloads/${file.name}\n\n2. 或使用線上工具壓縮 (推薦)：\nhttps://gltf.report\n(進去後執行 Script -> Simplify 並勾選 Draco 匯出)`);
+    if (file.size > 50 * 1024 * 1024) {
+      alert(`⚠️ 檔案過大 (${(file.size / 1024 / 1024).toFixed(1)}MB)\n\nGitHub API 單檔上限為 50MB。`);
       return;
     }
 
@@ -239,33 +239,68 @@ export default function Admin() {
     try {
       console.log('Step 1: Reading file as Base64...');
       const base64Content = await readFileAsBase64(file);
-      console.log('Step 2: Preparing API request...');
+      
+      console.log('Step 2: Fetching GitHub Token for Direct Upload...');
+      const tokenRes = await fetch('/api/get-github-token', { method: 'POST' });
+      if (!tokenRes.ok) throw new Error('Failed to retrieve GitHub Token (Is API route working?)');
+      const { token } = await tokenRes.json();
+      if (!token) throw new Error('Server did not return a GitHub Token');
 
-      const res = await fetch('/api/github-sync', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          path: `public/models/${file.name}`,
-          content: base64Content,
-          isBinary: true,
-          message: `Upload new 3D model: ${file.name}`
-        })
-      });
+      const REPO_OWNER = 'LIUYUTSO';
+      const REPO_NAME = 'VOYAGE-ARTIFACTS';
+      const encodedPath = `public/models/${file.name}`.split('/').map(segment => encodeURIComponent(segment)).join('/');
 
-      console.log('Step 3: Waiting for GitHub API response...');
-
-      let data;
-      const contentType = res.headers.get("content-type");
-      if (contentType && contentType.indexOf("application/json") !== -1) {
-        data = await res.json();
-      } else {
-        const textError = await res.text();
-        throw new Error(`Server returned non-JSON response (${res.status}): ${textError.substring(0, 100)}...`);
+      console.log('Step 3: Checking if file already exists (to overwrite)...');
+      let sha;
+      try {
+        const getFileRes = await fetch(
+            `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${encodedPath}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'application/vnd.github.v3+json',
+                },
+            }
+        );
+        if (getFileRes.ok) {
+            const fileData = await getFileRes.json();
+            sha = fileData.sha;
+        }
+      } catch (err) {
+          console.log('File does not exist yet. Will create new entry.');
       }
 
-      if (res.ok) {
-        console.log('Upload Success:', data);
-        alert('Model uploaded directly to GitHub! Vercel will rebuild soon.');
+      console.log('Step 4: Uploading directly to GitHub API (Bypassing Vercel)!');
+      const pushRes = await fetch(
+          `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${encodedPath}`,
+          {
+              method: 'PUT',
+              headers: {
+                  Authorization: `Bearer ${token}`,
+                  Accept: 'application/vnd.github.v3+json',
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  message: `Upload new 3D model: ${file.name} directly from client`,
+                  content: base64Content,
+                  sha: sha,
+                  branch: 'main',
+              }),
+          }
+      );
+
+      let data;
+      const contentType = pushRes.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        data = await pushRes.json();
+      } else {
+        const textError = await pushRes.text();
+        throw new Error(`GitHub returned non-JSON response (${pushRes.status}): ${textError.substring(0, 100)}...`);
+      }
+
+      if (pushRes.ok) {
+        console.log('Cloud Sync Successful:', data);
+        alert('Model uploaded directly to GitHub front-end (up to 50MB allowed)! Vercel will rebuild soon.');
         const newModelPath = `/models/${file.name}`;
 
         setAvailableModels(prev => {
@@ -276,8 +311,8 @@ export default function Admin() {
         setNewItem(prev => ({ ...prev, modelPath: newModelPath }));
       } else {
         console.error('Upload API Error:', data);
-        const detailedError = data.details ? `\n\nDetails: ${data.details}` : '';
-        throw new Error(`${data.error}${detailedError}`);
+        const detailedError = data.message ? `\n\nDetails: ${data.message}` : '';
+        throw new Error(`GitHub API Error (${pushRes.status})${detailedError}`);
       }
     } catch (err) {
       console.error('File Upload Logic Error:', err);
@@ -449,10 +484,11 @@ export default function Admin() {
                 {newItem.modelPath ? (
                   <ModelPreview
                     modelPath={newItem.modelPath}
-                    scale={newItem.scale}
+                    scale={1}
                     intensity={newItem.intensity}
                     rotationY={newItem.rotationY}
                     autoRotateSpeed={newItem.autoRotateSpeed}
+                    adjustCamera={1.8}
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-[8px] text-gray-200 font-bold uppercase tracking-[0.2em] text-center px-4 italic">Awaiting Asset</div>
@@ -654,10 +690,11 @@ export default function Admin() {
                         <div className="w-full h-full opacity-60 group-hover/inner:opacity-100 transition-opacity">
                           <ModelPreview
                             modelPath={item.modelPath}
-                            scale={item.scale || 1}
+                            scale={1}
                             intensity={item.intensity || 1.5}
                             rotationY={item.rotationY || 0}
                             autoRotateSpeed={item.autoRotateSpeed || 2}
+                            adjustCamera={1.8}
                           />
                         </div>
                       ) : (

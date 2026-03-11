@@ -137,9 +137,9 @@ export default function Home() {
         {/* Global Map Display - Full Bleed Design */}
         <section className="w-full mb-40 overflow-hidden relative">
           <div className="h-[600px] md:h-[850px] bg-black relative group">
-            <div className="absolute top-6 sm:top-12 left-6 sm:left-12 z-20 bg-black/95 backdrop-blur-2xl text-white px-5 sm:px-7 py-3 sm:py-5 rounded-2xl sm:rounded-3xl shadow-2xl border border-white/10 max-w-fit sm:max-w-[220px] group-hover:-translate-y-2 transition-transform duration-700 pointer-events-none">
-              <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.4em] mb-1 sm:mb-2 text-gray-400 whitespace-nowrap">Tactical Archive</p>
-              <p className="text-[10px] sm:text-sm font-bold leading-tight italic whitespace-nowrap">Drag and zoom to explore curiosities.</p>
+            <div className="absolute top-6 sm:top-10 left-6 sm:left-10 z-20 bg-black/95 backdrop-blur-2xl text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full shadow-2xl border border-white/10 flex items-center gap-2 sm:gap-3 group-hover:-translate-y-1 transition-transform duration-700 pointer-events-none max-w-[calc(100vw-3rem)]">
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full animate-pulse shrink-0"></div>
+              <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.3em] text-gray-300 mt-px truncate">Tactical Archive</p>
             </div>
 
             <div className="w-full h-full grayscale-[0.3] contrast-[1.05] hover:grayscale-0 transition-all duration-1000">
@@ -188,12 +188,12 @@ export default function Home() {
                       {item.modelPath ? (
                         <ModelPreview
                           modelPath={item.modelPath}
-                          scale={(item.scale || 1) * 0.4}
+                          scale={1}
                           intensity={item.intensity || 1.5}
                           rotationY={item.rotationY || 0}
                           autoRotateSpeed={item.autoRotateSpeed || 2}
                           fov={50}
-                          adjustCamera={false}
+                          adjustCamera={1.8}
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-[8px] text-gray-200 font-bold uppercase tracking-widest italic">Syncing...</div>
