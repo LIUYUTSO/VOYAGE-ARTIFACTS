@@ -9,6 +9,8 @@ export default function handler(req, res) {
   const { password } = req.body;
   
   if (password === correctPassword) {
+    // Set a cookie that will be sent with subsequent requests
+    res.setHeader('Set-Cookie', `auth_token=${password}; Path=/; HttpOnly; SameSite=Strict; Max-Age=3600`);
     return res.status(200).json({ success: true });
   } else {
     return res.status(401).json({ error: '密碼錯誤' });

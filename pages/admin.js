@@ -63,11 +63,21 @@ export default function Admin() {
     fetchData();
   }, []);
 
-  const checkPassword = () => {
-    if (password === '45636112') {
-      setAuthorized(true);
-    } else {
-      alert('Access Denied: Incorrect Security Key.');
+  const checkPassword = async () => {
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+      if (res.ok) {
+        setAuthorized(true);
+      } else {
+        alert('Access Denied: Incorrect Security Key.');
+      }
+    } catch (err) {
+      console.error('Auth error:', err);
+      alert('Authentication failed.');
     }
   };
 

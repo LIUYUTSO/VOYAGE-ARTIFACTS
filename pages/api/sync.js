@@ -1,5 +1,10 @@
+import { isAuthorized } from '../../utils/auth';
+
 export default async function handler(req, res) {
   if (req.method === 'POST') {
+    if (!isAuthorized(req)) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
     // 保存数据到服务器
     const collections = req.body;
     // 这里可以先用文件系统存储
