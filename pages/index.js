@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import { FaInstagram, FaArrowRight } from 'react-icons/fa';
 import { locationInfo as defaultLocationInfo } from '../data/collections';
 import Head from 'next/head';
+import Link from 'next/link';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 // Dynamic imports for performance and SSR safety
@@ -140,12 +141,12 @@ export default function Home() {
             <h1 className="text-white font-black tracking-tighter text-lg leading-none italic">VOYAGE ARTIFACTS</h1>
             <p className="text-gray-500 text-[8px] tracking-[0.3em] mt-1 uppercase font-bold">Curated By Adam Liu</p>
           </div>
-          <a
+          <Link
             href="/admin"
             className="text-[9px] font-black bg-white text-black px-4 py-2 rounded-full hover:bg-gray-100 transition-all uppercase tracking-widest shadow-xl shadow-black/10"
           >
             Management
-          </a>
+          </Link>
         </header>
 
         <div className="h-16"></div>
@@ -192,7 +193,16 @@ export default function Home() {
               <div
                 key={index}
                 onClick={() => handleSelectLocation(item)}
-                className="group flex-shrink-0 w-[240px] sm:w-auto bg-white rounded-[1.5rem] sm:rounded-[2.5rem] border border-gray-100 p-4 sm:p-6 shadow-sm hover:shadow-2xl hover:shadow-black/[0.04] transition-all duration-700 cursor-pointer flex flex-col justify-between snap-center"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleSelectLocation(item);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label={`View details for ${item.name}`}
+                className="group flex-shrink-0 w-[240px] sm:w-auto bg-white rounded-[1.5rem] sm:rounded-[2.5rem] border border-gray-100 p-4 sm:p-6 shadow-sm hover:shadow-2xl hover:shadow-black/[0.04] transition-all duration-700 cursor-pointer flex flex-col justify-between snap-center focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/10 focus-visible:border-black text-left"
               >
                 <div className="space-y-4 sm:space-y-6">
                   <div className="h-48 sm:h-72 bg-gray-50/50 rounded-[1.2rem] sm:rounded-[2rem] overflow-hidden relative group/canvas">
