@@ -135,6 +135,7 @@ export default function Admin() {
         }
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const registerBiometrics = async () => {
