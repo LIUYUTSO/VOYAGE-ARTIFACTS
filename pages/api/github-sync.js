@@ -7,9 +7,15 @@ export const config = {
     },
 };
 
+import { isAuthorized } from '../../utils/auth';
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method not allowed' });
+    }
+
+    if (!isAuthorized(req)) {
+        return res.status(401).json({ message: 'Unauthorized' });
     }
 
     const { content, path, message, isBinary } = req.body;
